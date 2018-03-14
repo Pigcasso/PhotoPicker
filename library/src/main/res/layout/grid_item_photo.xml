@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.pigcasso.photopicker.SquareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff0">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@android:id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        tools:src="@drawable/ic_check_box_outline_blank_black_24dp"/>
+
+</io.pigcasso.photopicker.SquareFrameLayout>
