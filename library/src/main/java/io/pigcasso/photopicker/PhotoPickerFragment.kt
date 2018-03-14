@@ -3,6 +3,7 @@ package io.pigcasso.photopicker
 import android.Manifest
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.ListPopupWindow
@@ -18,13 +19,15 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.PermissionRequest
 import java.io.File
+import java.lang.ref.WeakReference
 
 
 /**
  * @author Zhu Liang
  */
-class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
+class PhotoPickerFragment : Fragment() {
 
+    private var mSelectedAlbum: Album? = null
     private lateinit var mPhotoAdapter: PhotosAdapter
     private lateinit var mAlbumsAdapter: AlbumsAdapter
 
@@ -32,8 +35,6 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
         private const val PERMISSIONS = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val RC_READ_EXTERNAL_STORAGE = 1
     }
-
-    private lateinit var mPresenter: PhotoPickerContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,7 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
     override fun onResume() {
         super.onResume()
         if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
-            mPresenter.start()
+            loadAlbums()
         } else {
             EasyPermissions.requestPermissions(PermissionRequest.Builder(this, RC_READ_EXTERNAL_STORAGE, PERMISSIONS).build())
         }
@@ -74,18 +75,14 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
     @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
     private fun requestPermissions() {
         if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
-            mPresenter.start()
+            loadAlbums()
         } else {
             EasyPermissions.requestPermissions(this, "rationale",
                     RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
         }
     }
 
-    override fun setPresenter(presenter: PhotoPickerContract.Presenter) {
-        mPresenter = presenter
-    }
-
-    override fun setLoadingIndicator(active: Boolean) {
+    fun setLoadingIndicator(active: Boolean) {
         val loadingIndicator = findViewById<View>(R.id.loadingIndicator)
         loadingIndicator?.post({
             loadingIndicator.visibility = if (active) {
@@ -96,24 +93,41 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
         })
     }
 
-    override fun showNoAlbums() {
+    private fun loadAlbums() {
+        if (mSelectedAlbum == null) {
+            AlbumsAsyncTask(this).execute()
+        }
+    }
+
+    private fun loadPhotos(album: Album) {
 
     }
 
-    override fun showAlbums(albums: List<Album>) {
+    fun showNoAlbums() {
+
+    }
+
+    fun showAlbums(albums: List<Album>) {
         mAlbumsAdapter.replaceData(albums)
+
+        if (mSelectedAlbum == null) {
+            val album = albums[0]
+            setSelectedAlbum(album)
+            PhotosAsyncTask(this).execute(album)
+        }
     }
 
-    override fun showPhotos(album: Album, photos: List<Photo>) {
+    fun showPhotos(photos: List<Photo>) {
         mPhotoAdapter.replaceData(photos)
     }
 
-    override fun setSelectedAlbumLabel(album: Album) {
+    private fun setSelectedAlbum(album: Album) {
+        mSelectedAlbum = album
         val selectedAlbumTv = findViewById<TextView>(R.id.tv_photo_picker_selected_album_label)
         selectedAlbumTv?.text = album.directory.name
     }
 
-    override fun showAlbumPicker() {
+    fun showAlbumPicker() {
         val gridView = findViewById<GridView>(R.id.gridView) ?: return
 
         val popupWindow = ListPopupWindow(context!!)
@@ -127,8 +141,8 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
         popupWindow.setAdapter(mAlbumsAdapter)
         popupWindow.setOnItemClickListener { _, _, position, _ ->
             val album = mAlbumsAdapter.getItem(position)
-            setSelectedAlbumLabel(album)
-            mPresenter.loadPhotos(album)
+            setSelectedAlbum(album)
+            loadPhotos(album)
             popupWindow.dismiss()
         }
         popupWindow.show()
@@ -223,6 +237,48 @@ class PhotoPickerFragment : Fragment(), PhotoPickerContract.View {
 
         private fun setList(albums: List<Album>) {
             mAlbums = albums
+        }
+    }
+
+    private class AlbumsAsyncTask(fragment: PhotoPickerFragment) : AsyncTask<Void, Void, List<Album>>() {
+        private val mReference = WeakReference(fragment)
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            mReference.get()?.setLoadingIndicator(true)
+        }
+
+        override fun doInBackground(vararg params: Void?): List<Album> {
+            val fragment = mReference.get() ?: return listOf()
+            val context = fragment.context ?: return listOf()
+            return PhotosRepository(context).listAlbums()
+        }
+
+        override fun onPostExecute(result: List<Album>) {
+            super.onPostExecute(result)
+
+            if (result.isEmpty()) {
+                mReference.get()?.showNoAlbums()
+            } else {
+                mReference.get()?.showAlbums(result)
+            }
+            mReference.get()?.setLoadingIndicator(false)
+        }
+    }
+
+    private class PhotosAsyncTask(fragment: PhotoPickerFragment) : AsyncTask<Album, Void, List<Photo>>() {
+        private val mReference = WeakReference(fragment)
+
+        override fun doInBackground(vararg params: Album): List<Photo> {
+            val fragment = mReference.get() ?: return listOf()
+            val context = fragment.context ?: return listOf()
+            return PhotosRepository(context).listPhotoInfos(params[0])
+        }
+
+        override fun onPostExecute(result: List<Photo>) {
+            super.onPostExecute(result)
+
+            mReference.get()?.showPhotos(result)
         }
     }
 }

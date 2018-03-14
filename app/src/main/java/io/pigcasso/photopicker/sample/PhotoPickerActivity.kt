@@ -16,7 +16,5 @@ class PhotoPickerActivity : AppCompatActivity() {
             fragment = PhotoPickerFragment()
             supportFragmentManager.beginTransaction().add(R.id.contentFrame, fragment).commit()
         }
-
-        PhotoPickerPresenter(AlbumsLoader(this), supportLoaderManager, PhotosRepository(this), fragment as PhotoPickerContract.View)
     }
 }
