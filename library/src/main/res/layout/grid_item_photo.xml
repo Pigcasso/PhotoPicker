@@ -3,15 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ff0">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:contentDescription="@string/module_photo_picker_photo_thumb"
+        android:scaleType="centerCrop"/>
 
     <ImageView
+        android:contentDescription="@string/module_photo_picker_photo_checkbox"
         android:id="@android:id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

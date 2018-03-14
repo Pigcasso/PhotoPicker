@@ -35,11 +35,19 @@ class PhotoPickerPresenter(private val mLoader: AlbumsLoader, private val mLoade
         if (data == null || data.isEmpty()) {
             mPhotoPickerView.showNoAlbums()
         } else {
+            mPhotoPickerView.showAlbums(data)
             if (mSelectedAlbum == null) {
                 mSelectedAlbum = data.first()
-
+                mPhotoPickerView.showPhotos(mSelectedAlbum!!,
+                        mPhotosRepository.listPhotoInfos(mSelectedAlbum!!))
+                mPhotoPickerView.setSelectedAlbumLabel(mSelectedAlbum!!)
             }
         }
+    }
+
+    override fun loadPhotos(album: Album) {
+        mSelectedAlbum = album
+        mPhotoPickerView.showPhotos(album, mPhotosRepository.listPhotoInfos(album))
     }
 
     override fun onLoaderReset(loader: Loader<List<Album>>?) {

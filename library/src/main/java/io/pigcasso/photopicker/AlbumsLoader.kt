@@ -14,11 +14,11 @@ class AlbumsLoader(context: Context) : AsyncTaskLoader<List<Album>>(context), Ph
         private val TAG = AlbumsLoader::class.java.simpleName
     }
 
-    private val photosRepository = PhotosRepository(context)
+    private val mPhotosRepository = PhotosRepository(context)
 
     override fun loadInBackground(): List<Album> {
         Log.d(TAG, "loadInBackground: ")
-        return photosRepository.listAlbums()
+        return mPhotosRepository.listAlbums()
     }
 
     override fun deliverResult(data: List<Album>?) {
@@ -34,7 +34,7 @@ class AlbumsLoader(context: Context) : AsyncTaskLoader<List<Album>>(context), Ph
     override fun onStartLoading() {
         Log.d(TAG, "onStartLoading: ")
 
-        photosRepository.addPhotoPickerRepositoryObserver(this)
+        mPhotosRepository.addPhotoPickerRepositoryObserver(this)
 
         forceLoad()
     }
@@ -45,7 +45,7 @@ class AlbumsLoader(context: Context) : AsyncTaskLoader<List<Album>>(context), Ph
 
     override fun onReset() {
         onStopLoading()
-        photosRepository.removePhotoPickerRepositoryObserver(this)
+        mPhotosRepository.removePhotoPickerRepositoryObserver(this)
     }
 
     override fun onPhotoPickerChanged() {
