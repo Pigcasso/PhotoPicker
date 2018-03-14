@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 /**
  * @author Zhu Liang
  */
-abstract class CommonAdapter<T>(private val resource: Int, val mValues: List<T>) : BaseAdapter() {
+abstract class CommonAdapter<T>(private val resource: Int, private var mValues: List<T>) : BaseAdapter() {
 
     override fun getItem(position: Int) = mValues[position]
 
@@ -25,13 +25,29 @@ abstract class CommonAdapter<T>(private val resource: Int, val mValues: List<T>)
         }
         val viewHolder = rowView!!.tag as ViewHolder
         val value = getItem(position)
-        bindView(viewHolder, value)
+        bindView(viewHolder, value, position)
         return rowView
     }
 
-    protected abstract fun bindView(viewHolder: ViewHolder, value: T)
+    protected abstract fun bindView(viewHolder: ViewHolder, value: T, position: Int)
 
-    class ViewHolder(val itemView: View) {
-        fun <V : View> findViewById(id: Int) = itemView.findViewById<V>(id)
+    fun replaceData(values: List<T>) {
+        setList(values)
+        notifyDataSetChanged()
+    }
+
+    private fun setList(values: List<T>) {
+        mValues = values
+    }
+
+    fun getItemCount() = mValues.size
+
+    fun getValues() = mValues
+
+    class ViewHolder(private val itemView: View) {
+
+        fun <V : View> findViewById(id: Int): V? {
+            return itemView.findViewById(id)
+        }
     }
 }

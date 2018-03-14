@@ -6,20 +6,21 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@android:id/icon"
+        android:id="@+id/iv_photo_picker_photo_thumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/module_photo_picker_photo_thumb"
         android:scaleType="centerCrop"/>
 
     <ImageView
-        android:contentDescription="@string/module_photo_picker_photo_checkbox"
-        android:id="@android:id/checkbox"
+        android:id="@+id/iv_photo_picker_photo_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/module_photo_picker_photo_checkbox"
+        android:tint="?colorAccent"
         tools:src="@drawable/ic_check_box_outline_blank_black_24dp"/>
 
 </io.pigcasso.photopicker.SquareFrameLayout>

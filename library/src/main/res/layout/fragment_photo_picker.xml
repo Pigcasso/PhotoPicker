@@ -35,28 +35,35 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
 
         <TextView
             android:id="@+id/tv_photo_picker_selected_album_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:drawableEnd="@drawable/ic_arrow_drop_up_black_24dp"
             android:gravity="center_vertical"
             tools:text="照片"/>
 
-        <android.support.v4.widget.Space
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_photo_picker_preview"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:text="@string/module_photo_picker_preview"/>
 
         <TextView
+            android:id="@+id/tv_photo_picker_selected_toggle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="选择"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
+            android:text="@string/module_photo_picker_select_all"/>
+    </RelativeLayout>
 </LinearLayout>

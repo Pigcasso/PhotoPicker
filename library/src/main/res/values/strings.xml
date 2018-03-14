@@ -3,4 +3,10 @@
     <string name="module_photo_picker_album_cover">相册封面</string>
     <string name="module_photo_picker_photo_thumb">缩略图</string>
     <string name="module_photo_picker_photo_checkbox">多选框</string>
+    <string name="module_photo_picker_album_checkbox">多选框</string>
+    <string name="module_photo_picker_preview">预览</string>
+    <string name="module_photo_picker_select_all">全选</string>
+    <string name="module_photo_picker_unselected_all">取消全选</string>
+    <string name="module_photo_picker_select_done">完成</string>
+    <string name="module_photo_picker_select_photo_count">选择图片 %d</string>
 </resources>
