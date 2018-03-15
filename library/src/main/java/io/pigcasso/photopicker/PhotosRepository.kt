@@ -12,8 +12,6 @@ import kotlin.collections.ArrayList
  */
 class PhotosRepository(private val context: Context) {
 
-    private val mObservers = mutableListOf<PhotoPickerRepositoryObserver>()
-
     fun listAlbums(): List<Album> {
         // 外部存储Uri
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -41,27 +39,9 @@ class PhotosRepository(private val context: Context) {
         return albums
     }
 
-    fun listPhotoInfos(album: Album): List<Photo> {
+    fun listPhotos(album: Album): List<Photo> {
         return File(album.directory.absolutePath).listFiles(ImageFileFilter()).map { t ->
             Photo(t)
-        }
-    }
-
-    fun addPhotoPickerRepositoryObserver(observer: PhotoPickerRepositoryObserver) {
-        if (!mObservers.contains(observer)) {
-            mObservers.add(observer)
-        }
-    }
-
-    fun removePhotoPickerRepositoryObserver(observer: PhotoPickerRepositoryObserver) {
-        if (mObservers.contains(observer)) {
-            mObservers.remove(observer)
-        }
-    }
-
-    fun notifyContentObserver() {
-        mObservers.forEach {
-            it.onPhotoPickerChanged()
         }
     }
 
@@ -71,9 +51,5 @@ class PhotosRepository(private val context: Context) {
                     || name.endsWith(".jpeg", true)
                     || name.endsWith("png", true)
         }
-    }
-
-    interface PhotoPickerRepositoryObserver {
-        fun onPhotoPickerChanged()
     }
 }

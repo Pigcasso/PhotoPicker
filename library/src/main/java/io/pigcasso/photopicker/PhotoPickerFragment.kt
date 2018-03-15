@@ -74,6 +74,9 @@ class PhotoPickerFragment : Fragment() {
         findViewById<View>(R.id.tv_photo_picker_selected_toggle)!!.setOnClickListener {
             toggleCheckAll()
         }
+        findViewById<View>(R.id.tv_photo_picker_preview)!!.setOnClickListener {
+            showPhotoPreview()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -269,6 +272,12 @@ class PhotoPickerFragment : Fragment() {
         mPhotosAdapter!!.notifyDataSetChanged()
     }
 
+    private fun showPhotoPreview() {
+        if (context == null) return
+        val starter = PhotoViewActivity.makeIntent(context!!, getAllCheckedPhotos())
+        startActivity(starter)
+    }
+
     /**
      * 更新"全选"或"全不选"按钮上的文字
      */
@@ -366,7 +375,7 @@ class PhotoPickerFragment : Fragment() {
         override fun doInBackground(vararg params: Void): List<Photo> {
             val fragment = mReference.get() ?: return listOf()
             val context = fragment.context ?: return listOf()
-            return PhotosRepository(context).listPhotoInfos(album)
+            return PhotosRepository(context).listPhotos(album)
         }
 
         override fun onPostExecute(result: List<Photo>) {

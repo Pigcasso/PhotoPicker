@@ -18,6 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name="io.pigcasso.photopicker.PhotoViewActivity"
+            android:label="@string/module_photo_view_preview"/>
     </application>
 
 </manifest>
