@@ -11,13 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PhotoPickerActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="io.pigcasso.photopicker.PhotoPickerActivity"/>
         <activity
             android:name="io.pigcasso.photopicker.PhotoViewActivity"
             android:label="@string/module_photo_view_preview"/>

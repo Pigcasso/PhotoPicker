@@ -12,7 +12,6 @@ import android.view.*
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -46,6 +45,7 @@ class PhotoPickerFragment : Fragment() {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAlbumsAdapter = AlbumsAdapter(arrayListOf())
@@ -121,7 +121,7 @@ class PhotoPickerFragment : Fragment() {
         if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
             loadAlbums()
         } else {
-            EasyPermissions.requestPermissions(this, "rationale",
+            EasyPermissions.requestPermissions(this, getString(R.string.module_photo_picker_read_external_storage_rationale),
                     RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
         }
     }
@@ -179,7 +179,7 @@ class PhotoPickerFragment : Fragment() {
         selectedAlbumTv?.text = album.name
     }
 
-    fun showAlbumPicker() {
+    private fun showAlbumPicker() {
         val gridView = findViewById<GridView>(R.id.gridView) ?: return
 
         val popupWindow = ListPopupWindow(context!!)
@@ -221,17 +221,11 @@ class PhotoPickerFragment : Fragment() {
      * 用户选好图片后，点击了完成按钮
      */
     private fun selectDone() {
-
-        if (activity == null) return
-
-        val photos = getAllCheckedPhotos()
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(activity, "Checked photos count: ${photos.size}", Toast.LENGTH_SHORT).show()
-        }
+        mOnPhotoPickerListener?.onSelectedResult(getAllCheckedPhotos())
     }
 
-    fun getAllCheckedPhotos(): List<String> {
-        val photos = mutableListOf<String>()
+    fun getAllCheckedPhotos(): ArrayList<String> {
+        val photos = arrayListOf<String>()
         mCheckedPhotos.forEach { it ->
             photos.add(it)
         }
@@ -390,6 +384,14 @@ class PhotoPickerFragment : Fragment() {
     }
 
     interface OnPhotoPickerListener {
+        /**
+         * 更新选中的图片时回调
+         */
         fun onPhotosSelect(photoPaths: List<String>)
+
+        /**
+         * 点击完成时回调
+         */
+        fun onSelectedResult(photoPaths: ArrayList<String>)
     }
 }
