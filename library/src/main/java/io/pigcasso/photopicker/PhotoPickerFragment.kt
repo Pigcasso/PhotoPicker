@@ -29,7 +29,7 @@ class PhotoPickerFragment : Fragment() {
     private var mSelectedAlbum: Album? = null
     private lateinit var mAlbumsAdapter: AlbumsAdapter
     private var mPhotosAdapter: PhotosAdapter? = null
-    private lateinit var mCheckedPhotos: HashMap<String, HashSet<String>>
+    private lateinit var mCheckedPhotos: HashSet<String>
     private var mOnPhotoPickerListener: OnPhotoPickerListener? = null
 
     companion object {
@@ -51,9 +51,9 @@ class PhotoPickerFragment : Fragment() {
         mAlbumsAdapter = AlbumsAdapter(arrayListOf())
 
         mCheckedPhotos = if (savedInstanceState != null) {
-            savedInstanceState.getSerializable(EXTRA_PHOTOS) as HashMap<String, HashSet<String>>
+            savedInstanceState.getSerializable(EXTRA_PHOTOS) as HashSet<String>
         } else {
-            HashMap()
+            HashSet()
         }
 
         setHasOptionsMenu(true)
@@ -162,9 +162,13 @@ class PhotoPickerFragment : Fragment() {
         }
     }
 
-    fun showPhotos(album: Album, photos: List<Photo>) {
+    fun showNoPhotos() {
+
+    }
+
+    fun showPhotos(photos: List<Photo>) {
         val gridView = findViewById<GridView>(R.id.gridView)
-        mPhotosAdapter = PhotosAdapter(this, album, photos)
+        mPhotosAdapter = PhotosAdapter(this, photos)
         gridView?.adapter = mPhotosAdapter
         updateToggleText()
     }
@@ -172,7 +176,7 @@ class PhotoPickerFragment : Fragment() {
     private fun setSelectedAlbum(album: Album) {
         mSelectedAlbum = album
         val selectedAlbumTv = findViewById<TextView>(R.id.tv_photo_picker_selected_album_label)
-        selectedAlbumTv?.text = album.directory.name
+        selectedAlbumTv?.text = album.name
     }
 
     fun showAlbumPicker() {
@@ -197,28 +201,20 @@ class PhotoPickerFragment : Fragment() {
         popupWindow.show()
     }
 
-    private fun isPhotoChecked(album: Album, photo: Photo): Boolean {
-        return if (mCheckedPhotos.containsKey(album.directory.absolutePath)) {
-            val photos = mCheckedPhotos[album.directory.absolutePath]!!
-            photos.contains(photo.absolutePath)
-        } else {
-            false
+    private fun isPhotoChecked(photo: Photo): Boolean {
+        return mCheckedPhotos.contains(photo.absolutePath)
+    }
+
+    fun uncheckedPhoto(photo: Photo) {
+        if (mCheckedPhotos.contains(photo.absolutePath)) {
+            mCheckedPhotos.remove(photo.absolutePath)
         }
     }
 
-    fun removePhoto(album: Album, photo: Photo) {
-        val photos = mCheckedPhotos[album.directory.absolutePath]
-        checkNotNull(photo)
-        photos!!.remove(photo.absolutePath)
-    }
-
-    fun addPhoto(album: Album, photo: Photo) {
-        var photos = mCheckedPhotos[album.directory.absolutePath]
-        if (photos == null) {
-            photos = HashSet()
-            mCheckedPhotos[album.directory.absolutePath] = photos
+    fun checkPhoto(photo: Photo) {
+        if (mCheckedPhotos.contains(photo.absolutePath).not()) {
+            mCheckedPhotos.add(photo.absolutePath)
         }
-        photos.add(photo.absolutePath)
     }
 
     /**
@@ -236,10 +232,8 @@ class PhotoPickerFragment : Fragment() {
 
     fun getAllCheckedPhotos(): List<String> {
         val photos = mutableListOf<String>()
-        mCheckedPhotos.values.forEach { it ->
-            it.forEach {
-                photos.add(it)
-            }
+        mCheckedPhotos.forEach { it ->
+            photos.add(it)
         }
         return photos
     }
@@ -248,8 +242,15 @@ class PhotoPickerFragment : Fragment() {
      * 当前选中的相册下的图片是否全部被选中
      */
     private fun isCheckedAll(): Boolean {
-        val photos = mCheckedPhotos[mPhotosAdapter!!.getAlbumPath()]
-        return (photos == null || photos.isEmpty() || photos.size < mPhotosAdapter!!.getItemCount()).not()
+        /*val photos = mCheckedPhotos[mPhotosAdapter!!.getAlbumPath()]
+        return (photos == null || photos.isEmpty() || photos.size < mPhotosAdapter!!.getItemCount()).not()*/
+        checkNotNull(mPhotosAdapter)
+        mPhotosAdapter!!.getValues().forEach {
+            if (mCheckedPhotos.contains(it.absolutePath).not()) {
+                return false
+            }
+        }
+        return true
     }
 
     /**
@@ -259,13 +260,13 @@ class PhotoPickerFragment : Fragment() {
         if (mPhotosAdapter == null) return
         // 全不选
         if (isCheckedAll()) {
-            mCheckedPhotos.remove(mPhotosAdapter!!.getAlbumPath())
-        } else {
-            val photos = HashSet<String>()
             mPhotosAdapter!!.getValues().forEach {
-                photos.add(it.absolutePath)
+                uncheckedPhoto(it)
             }
-            mCheckedPhotos[mPhotosAdapter!!.getAlbumPath()] = photos
+        } else {
+            mPhotosAdapter!!.getValues().forEach {
+                checkPhoto(it)
+            }
         }
         mOnPhotoPickerListener?.onPhotosSelect(getAllCheckedPhotos())
         updateToggleText()
@@ -293,31 +294,30 @@ class PhotoPickerFragment : Fragment() {
         })
     }
 
-    private class PhotosAdapter(private val fragment: PhotoPickerFragment, private val album: Album, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_photo, photos) {
+    private class PhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_photo, photos) {
+
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
             Glide.with(thumbIv).load(File(value.absolutePath)).into(thumbIv)
 
             val checkboxIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_checkbox)!!
-            if (fragment.isPhotoChecked(album, value)) {
+            if (fragment.isPhotoChecked(value)) {
                 checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
             } else {
                 checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
             }
             checkboxIv.setOnClickListener({
-                if (fragment.isPhotoChecked(album, value)) {
-                    fragment.removePhoto(album, value)
+                if (fragment.isPhotoChecked(value)) {
+                    fragment.uncheckedPhoto(value)
                     checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
                 } else {
-                    fragment.addPhoto(album, value)
+                    fragment.checkPhoto(value)
                     checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
                 }
                 fragment.updateToggleText()
                 fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
             })
         }
-
-        fun getAlbumPath(): String = album.directory.absolutePath
     }
 
     private class AlbumsAdapter(albums: List<Album>) : CommonAdapter<Album>(R.layout.list_item_album, albums) {
@@ -325,10 +325,10 @@ class PhotoPickerFragment : Fragment() {
 
         override fun bindView(viewHolder: ViewHolder, value: Album, position: Int) {
             val coverIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_cover)!!
-            Glide.with(coverIv).load(File(value.cover.absolutePath)).into(coverIv)
+            Glide.with(coverIv).load(File(value.photos.first().absolutePath)).into(coverIv)
 
-            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!.text = value.directory.name
-            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!.text = "${value.count}"
+            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!.text = value.name
+            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!.text = "${value.photos.size}"
 
             if (mCheckedPosition == position) {
                 viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_checkbox)?.visibility = View.VISIBLE
@@ -381,7 +381,11 @@ class PhotoPickerFragment : Fragment() {
         override fun onPostExecute(result: List<Photo>) {
             super.onPostExecute(result)
 
-            mReference.get()?.showPhotos(album, result)
+            if (result.isEmpty()) {
+                mReference.get()?.showNoPhotos()
+            } else {
+                mReference.get()?.showPhotos(result)
+            }
         }
     }
 

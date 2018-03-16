@@ -3,9 +3,6 @@ package io.pigcasso.photopicker
 import android.content.Context
 import android.provider.MediaStore
 import java.io.File
-import java.io.FilenameFilter
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * @author Zhu Liang
@@ -13,6 +10,12 @@ import kotlin.collections.ArrayList
 class PhotosRepository(private val context: Context) {
 
     fun listAlbums(): List<Album> {
+        val albums = mutableListOf<Album>()
+        listAlbums(albums)
+        return albums
+    }
+
+    private fun listAlbums(albums: MutableList<Album>) {
         // 外部存储Uri
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(MediaStore.Images.ImageColumns.DATA)
@@ -21,35 +24,43 @@ class PhotosRepository(private val context: Context) {
         val selectionArgs = arrayOf("image/jpeg", "image/png")
         val sortOrder = null
         val cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)
-        val dirPaths = HashSet<String>()
-        val albums = ArrayList<Album>()
+        val dirPaths = HashMap<String, Album>()
+
+        val allPhotos = mutableListOf<Photo>()
         while (cursor.moveToNext()) {
             val filepath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA))
             val parentFile = File(filepath).parentFile ?: continue
             val parentPath = parentFile.absolutePath
-            if (dirPaths.contains(parentPath)) {
-                continue
-            }
-            dirPaths.add(parentPath)
-            val picSize = parentFile.list(ImageFileFilter()).size
-            val album = Album(Photo(File(filepath)), Photo(parentFile), picSize)
-            albums.add(album)
+            val album =
+                    if (dirPaths.contains(parentPath)) {
+                        dirPaths[parentPath]!!
+                    } else {
+                        val temp = Album(parentFile.name, arrayListOf())
+                        dirPaths[parentPath] = temp
+                        albums.add(temp)
+                        temp
+                    }
+
+            // dirPaths.add(parentPath)
+            // val picSize = parentFile.list(ImageFileFilter()).size
+            // val album = Album(Photo(File(filepath)), Photo(parentFile), picSize)
+            // albums.add(album)
+            val photo = Photo(File(filepath))
+            allPhotos.add(photo)
+            album.photos.add(photo)
         }
+
+        if (allPhotos.isNotEmpty()) {
+            albums.add(0, Album("All", allPhotos))
+        }
+
         cursor.close()
-        return albums
     }
 
     fun listPhotos(album: Album): List<Photo> {
-        return File(album.directory.absolutePath).listFiles(ImageFileFilter()).map { t ->
+        /*return File(album.directory.absolutePath).listFiles(ImageFileFilter()).map { t ->
             Photo(t)
-        }
-    }
-
-    private class ImageFileFilter : FilenameFilter {
-        override fun accept(p: File, name: String): Boolean {
-            return name.endsWith(".jpg", true)
-                    || name.endsWith(".jpeg", true)
-                    || name.endsWith("png", true)
-        }
+        }*/
+        return album.photos
     }
 }
