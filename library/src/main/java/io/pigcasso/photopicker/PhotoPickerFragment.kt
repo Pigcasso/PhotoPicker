@@ -104,7 +104,6 @@ class PhotoPickerFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        mOnPhotoPickerListener?.onPhotosSelect(getAllCheckedPhotos())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -123,6 +122,9 @@ class PhotoPickerFragment : Fragment() {
         findViewById<View>(R.id.tv_photo_picker_preview)!!.setOnClickListener {
             showPhotoPreview()
         }
+
+        onPhotosSelect()
+        updateToggleText()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -173,12 +175,19 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun setLoadingIndicator(active: Boolean) {
-        val loadingIndicator = findViewById<View>(R.id.loadingIndicator)
-        loadingIndicator?.post({
-            loadingIndicator.visibility = if (active) {
-                View.VISIBLE
+        if (view == null) return
+        val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
+        val loadingIndicator = findViewById<View>(R.id.loadingIndicator)!!
+        val statusIndicator = findViewById<View>(R.id.statusIndicator)!!
+        indicatorRv.post({
+            if (active) {
+                indicatorRv.visibility = View.VISIBLE
+                loadingIndicator.visibility = View.VISIBLE
+                statusIndicator.visibility = View.INVISIBLE
             } else {
-                View.INVISIBLE
+                indicatorRv.visibility = View.INVISIBLE
+                loadingIndicator.visibility = View.INVISIBLE
+                statusIndicator.visibility = View.VISIBLE
             }
         })
     }
@@ -194,7 +203,10 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun showNoAlbums() {
-
+        val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)
+        indicatorRv?.post({
+            indicatorRv.visibility = View.VISIBLE
+        })
     }
 
     fun showAlbums(albums: List<Album>) {
@@ -215,7 +227,9 @@ class PhotoPickerFragment : Fragment() {
     fun showPhotos(photos: List<Photo>) {
         val gridView = findViewById<GridView>(R.id.gridView)
         when (mChoiceMode) {
-            CHOICE_MODE_SINGLE -> TODO("Not implemented")
+            CHOICE_MODE_SINGLE -> {
+                mPhotosAdapter = UnorderedPhotosAdapter(this, photos)
+            }
             CHOICE_MODE_MULTIPLE_UPPER_LIMIT -> {
                 mPhotosAdapter = if (mCountable) {
                     OrderedPhotosAdapter(this, photos)
@@ -324,9 +338,20 @@ class PhotoPickerFragment : Fragment() {
                 checkPhoto(it)
             }
         }
-        mOnPhotoPickerListener?.onPhotosSelect(getAllCheckedPhotos())
+        onPhotosSelect()
         updateToggleText()
         mPhotosAdapter!!.notifyDataSetChanged()
+    }
+
+    /**
+     * 1. 回调 [OnPhotoPickerListener.onPhotosSelect]
+     * 2. 是否启用"预览按钮"
+     */
+    private fun onPhotosSelect() {
+        val checkedPhotos = getAllCheckedPhotos()
+        mOnPhotoPickerListener?.onPhotosSelect(checkedPhotos)
+        val previewTv = findViewById<View>(R.id.tv_photo_picker_preview)
+        previewTv?.isEnabled = checkedPhotos.isNotEmpty()
     }
 
     private fun showPhotoPreview() {
@@ -343,11 +368,18 @@ class PhotoPickerFragment : Fragment() {
             return
         }
         val toggleText = view!!.findViewById<TextView>(R.id.tv_photo_picker_selected_toggle)
-        toggleText.setText(if (isCheckedAll()) {
-            R.string.module_photo_picker_unselected_all
+        // 只有不设上限的多选模式才支持全选功能
+        if (CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == mChoiceMode) {
+            toggleText.setText(if (isCheckedAll()) {
+                R.string.module_photo_picker_unselected_all
+            } else {
+                R.string.module_photo_picker_select_all
+            })
         } else {
-            R.string.module_photo_picker_select_all
-        })
+            if (toggleText.visibility == View.VISIBLE) {
+                toggleText.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun allowsToCheck(): Boolean {
@@ -374,15 +406,25 @@ class PhotoPickerFragment : Fragment() {
                     fragment.uncheckedPhoto(value)
                     checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
                     fragment.updateToggleText()
-                    fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                    fragment.onPhotosSelect()
                 } else {
-                    if (fragment.allowsToCheck()) {
+                    if (CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == fragment.mChoiceMode
+                            || CHOICE_MODE_MULTIPLE_UPPER_LIMIT == fragment.mChoiceMode) {
+                        if (fragment.allowsToCheck()) {
+                            fragment.checkPhoto(value)
+                            checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                            fragment.updateToggleText()
+                            fragment.onPhotosSelect()
+                        } else {
+                            fragment.showToast(fragment.getString(R.string.module_photo_picker_max_limit, fragment.mLimitCount))
+                        }
+                    } else {
+                        fragment.mCheckedPhotos.clear()
                         fragment.checkPhoto(value)
+                        notifyDataSetChanged()
                         checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
                         fragment.updateToggleText()
-                        fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
-                    } else {
-                        fragment.showToast(fragment.getString(R.string.module_photo_picker_max_limit, fragment.mLimitCount))
+                        fragment.onPhotosSelect()
                     }
                 }
             })
@@ -411,13 +453,13 @@ class PhotoPickerFragment : Fragment() {
                     fragment.uncheckedPhoto(value)
                     notifyDataSetChanged()
                     fragment.updateToggleText()
-                    fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                    fragment.onPhotosSelect()
                 } else {
                     if (fragment.allowsToCheck()) {
                         fragment.checkPhoto(value)
                         notifyDataSetChanged()
                         fragment.updateToggleText()
-                        fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                        fragment.onPhotosSelect()
                     } else {
                         fragment.showToast(fragment.getString(R.string.module_photo_picker_max_limit, fragment.mLimitCount))
                     }

@@ -53,16 +53,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSingleChoice(view: View) {
+        val allPhotosAlbum = mAllPhotosAlbumSwitch.isChecked
 
-
+        val intent = PhotoPickerActivity.singleChoice(this, allPhotosAlbum)
+        startActivityForResult(intent, RC_PHOTO_PICKER)
     }
 
     fun onMultiChoice(view: View) {
 
         val allPhotosAlbum = mAllPhotosAlbumSwitch.isChecked
-        var choiceMode: Int
-        var countable: Boolean
-        var limitCount: Int
+        val choiceMode: Int
+        val countable: Boolean
+        val limitCount: Int
         if (mMultiChoiceNoUpperLimitSwitch.isChecked) {
             choiceMode = CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
             countable = false
@@ -77,8 +79,7 @@ class MainActivity : AppCompatActivity() {
             limitCount = mLimitCountEt.text.toString().toInt()
         }
 
-
-        val intent = PhotoPickerActivity.makeIntent(this, allPhotosAlbum, choiceMode, limitCount, countable)
+        val intent = PhotoPickerActivity.multiChoice(this, allPhotosAlbum, choiceMode, limitCount, countable)
         startActivityForResult(intent, RC_PHOTO_PICKER)
     }
 }

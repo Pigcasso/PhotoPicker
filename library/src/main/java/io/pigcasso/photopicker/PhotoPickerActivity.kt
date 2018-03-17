@@ -11,7 +11,15 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
     companion object {
         const val EXTRA_RESULT_SELECTION = "extra_result_selection"
 
-        fun makeIntent(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean): Intent {
+        fun singleChoice(context: Context, allPhotosAlbum: Boolean): Intent {
+            val intent = Intent(context, PhotoPickerActivity::class.java)
+            intent.putExtra(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
+            intent.putExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_SINGLE)
+            return intent
+        }
+
+        fun multiChoice(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean): Intent {
+            check(CHOICE_MODE_MULTIPLE_UPPER_LIMIT == choiceMode || CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == choiceMode)
             val intent = Intent(context, PhotoPickerActivity::class.java)
             intent.putExtra(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
             intent.putExtra(EXTRA_CHOICE_MODE, choiceMode)

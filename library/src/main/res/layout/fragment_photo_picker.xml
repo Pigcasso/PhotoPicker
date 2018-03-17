@@ -1,43 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="?android:windowBackground">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <GridView
-            android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:horizontalSpacing="2dp"
-            android:numColumns="3"
-            android:verticalSpacing="2dp"/>
-
-        <ProgressBar
-            android:id="@+id/loadingIndicator"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
-
-    </RelativeLayout>
-
-    <!--锚点-->
-    <View
-        android:id="@+id/popup_anchor"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/rv_photo_picker_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:paddingEnd="8dp"
         android:paddingStart="8dp">
@@ -50,6 +23,11 @@
             android:gravity="center_vertical"
             tools:text="照片"/>
 
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/tv_photo_picker_preview"
             android:layout_width="wrap_content"
@@ -58,6 +36,11 @@
             android:gravity="center_vertical"
             android:text="@string/module_photo_picker_preview"/>
 
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/tv_photo_picker_selected_toggle"
             android:layout_width="wrap_content"
@@ -65,5 +48,44 @@
             android:layout_alignParentEnd="true"
             android:gravity="center_vertical"
             android:text="@string/module_photo_picker_select_all"/>
+    </LinearLayout>
+
+    <!--锚点-->
+    <View
+        android:id="@+id/popup_anchor"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/rv_photo_picker_bottom_bar"/>
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/popup_anchor"
+        android:horizontalSpacing="2dp"
+        android:numColumns="3"
+        android:verticalSpacing="2dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rv_photo_picker_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:windowBackground">
+
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/statusIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            tools:text="Status Indicator"/>
+
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>
