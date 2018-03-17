@@ -9,13 +9,16 @@ import java.io.File
  */
 class PhotosRepository(private val context: Context) {
 
-    fun listAlbums(): List<Album> {
+    fun listAlbums(allPhotosAlbum: Boolean): List<Album> {
         val albums = mutableListOf<Album>()
-        listAlbums(albums)
+        listAlbums(albums, allPhotosAlbum)
         return albums
     }
 
-    private fun listAlbums(albums: MutableList<Album>) {
+    /**
+     * @param allPhotosAlbum 是否显示所有照片的相册
+     */
+    private fun listAlbums(albums: MutableList<Album>, allPhotosAlbum: Boolean) {
         // 外部存储Uri
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(MediaStore.Images.ImageColumns.DATA)
@@ -41,12 +44,10 @@ class PhotosRepository(private val context: Context) {
                         temp
                     }
 
-            // dirPaths.add(parentPath)
-            // val picSize = parentFile.list(ImageFileFilter()).size
-            // val album = Album(Photo(File(filepath)), Photo(parentFile), picSize)
-            // albums.add(album)
             val photo = Photo(File(filepath))
-            allPhotos.add(photo)
+            if (allPhotosAlbum) {
+                allPhotos.add(photo)
+            }
             album.photos.add(photo)
         }
 

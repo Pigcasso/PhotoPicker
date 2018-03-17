@@ -27,14 +27,42 @@ class PhotoPickerFragment : Fragment() {
 
     private var mSelectedAlbum: Album? = null
     private lateinit var mAlbumsAdapter: AlbumsAdapter
-    private var mPhotosAdapter: PhotosAdapter? = null
-    private lateinit var mCheckedPhotos: HashSet<String>
+    private var mPhotosAdapter: CommonAdapter<Photo>? = null
+    private lateinit var mCheckedPhotos: ArrayList<String>
     private var mOnPhotoPickerListener: OnPhotoPickerListener? = null
+
+    private var mChoiceMode: Int = CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
+    /**
+     * 照片可选的上限数，如果等于[-1]表示不设上限，如果大于等于[1]表示设置了上限。其他数值都是无效数值。
+     */
+    private var mLimitCount: Int = NO_LIMIT_COUNT
+
+    /**
+     * 是否显示所有照片的相册
+     */
+    private var mAllPhotosAlbum: Boolean = true
+
+    /**
+     * 是否记录用户的选择次序
+     */
+    private var mCountable: Boolean = false
 
     companion object {
         private const val PERMISSIONS = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val RC_READ_EXTERNAL_STORAGE = 1
-        private const val EXTRA_PHOTOS = "extra.PHOTOS"
+        private const val EXTRA_CHECKED_PHOTOS = "extra.CHECKED_PHOTOS"
+
+        fun newInstance(allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean): PhotoPickerFragment {
+            val arguments = Bundle()
+            arguments.putBoolean(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
+            arguments.putInt(EXTRA_CHOICE_MODE, choiceMode)
+            arguments.putInt(EXTRA_LIMIT_COUNT, limitCount)
+            arguments.putBoolean(EXTRA_COUNTABLE, countable)
+
+            val fragment = PhotoPickerFragment()
+            fragment.arguments = arguments
+            return fragment
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -51,10 +79,28 @@ class PhotoPickerFragment : Fragment() {
         mAlbumsAdapter = AlbumsAdapter(arrayListOf())
 
         mCheckedPhotos = if (savedInstanceState != null) {
-            savedInstanceState.getSerializable(EXTRA_PHOTOS) as HashSet<String>
+            savedInstanceState.getStringArrayList(EXTRA_CHECKED_PHOTOS)
         } else {
-            HashSet()
+            ArrayList(0)
         }
+
+        // arguments不能为空
+        checkNotNull(arguments)
+
+        // 设置选择模式
+        val choiceMode = arguments!!.getInt(EXTRA_CHOICE_MODE)
+        check(choiceMode == CHOICE_MODE_SINGLE
+                || choiceMode == CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
+                || choiceMode == CHOICE_MODE_MULTIPLE_UPPER_LIMIT, { "Invalid choice mode: $choiceMode" })
+        mChoiceMode = choiceMode
+
+        val limitCount = arguments!!.getInt(EXTRA_LIMIT_COUNT)
+        check(limitCount == NO_LIMIT_COUNT || limitCount >= 1, { "Invalid limit count: $limitCount" })
+        mLimitCount = limitCount
+
+        mAllPhotosAlbum = arguments!!.getBoolean(EXTRA_ALL_PHOTOS_ALBUM, true)
+
+        mCountable = arguments!!.getBoolean(EXTRA_COUNTABLE, false)
 
         setHasOptionsMenu(true)
 
@@ -107,7 +153,7 @@ class PhotoPickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putSerializable(EXTRA_PHOTOS, mCheckedPhotos)
+        outState.putSerializable(EXTRA_CHECKED_PHOTOS, mCheckedPhotos)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -168,7 +214,19 @@ class PhotoPickerFragment : Fragment() {
 
     fun showPhotos(photos: List<Photo>) {
         val gridView = findViewById<GridView>(R.id.gridView)
-        mPhotosAdapter = PhotosAdapter(this, photos)
+        when (mChoiceMode) {
+            CHOICE_MODE_SINGLE -> TODO("Not implemented")
+            CHOICE_MODE_MULTIPLE_UPPER_LIMIT -> {
+                mPhotosAdapter = if (mCountable) {
+                    OrderedPhotosAdapter(this, photos)
+                } else {
+                    UnorderedPhotosAdapter(this, photos)
+                }
+            }
+            CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT -> {
+                mPhotosAdapter = UnorderedPhotosAdapter(this, photos)
+            }
+        }
         gridView?.adapter = mPhotosAdapter
         updateToggleText()
     }
@@ -215,6 +273,10 @@ class PhotoPickerFragment : Fragment() {
         if (mCheckedPhotos.contains(photo.absolutePath).not()) {
             mCheckedPhotos.add(photo.absolutePath)
         }
+    }
+
+    fun indexOfPhoto(photo: Photo): Int {
+        return mCheckedPhotos.indexOf(photo.absolutePath)
     }
 
     /**
@@ -288,7 +350,14 @@ class PhotoPickerFragment : Fragment() {
         })
     }
 
-    private class PhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_photo, photos) {
+    private fun allowsToCheck(): Boolean {
+        return mLimitCount == NO_LIMIT_COUNT || mCheckedPhotos.size < mLimitCount
+    }
+
+    /**
+     * 无序多选照片适配器
+     */
+    private class UnorderedPhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_photo, photos) {
 
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
@@ -300,17 +369,60 @@ class PhotoPickerFragment : Fragment() {
             } else {
                 checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
             }
-            checkboxIv.setOnClickListener({
+            thumbIv.setOnClickListener({
                 if (fragment.isPhotoChecked(value)) {
                     fragment.uncheckedPhoto(value)
                     checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
+                    fragment.updateToggleText()
+                    fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
                 } else {
-                    fragment.checkPhoto(value)
-                    checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                    if (fragment.allowsToCheck()) {
+                        fragment.checkPhoto(value)
+                        checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                        fragment.updateToggleText()
+                        fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                    } else {
+                        fragment.showToast(fragment.getString(R.string.module_photo_picker_max_limit, fragment.mLimitCount))
+                    }
                 }
-                fragment.updateToggleText()
-                fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
             })
+        }
+    }
+
+    /**
+     * 有序多选照片适配器
+     */
+    private class OrderedPhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_ordered_photo, photos) {
+        override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
+            val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
+            Glide.with(thumbIv).load(File(value.absolutePath)).into(thumbIv)
+
+            val checkedOrderTv = viewHolder.findViewById<TextView>(R.id.iv_photo_picker_photo_checked_order)!!
+            val index = fragment.indexOfPhoto(value)
+            if (index == -1) {
+                checkedOrderTv.visibility = View.INVISIBLE
+            } else {
+                checkedOrderTv.visibility = View.VISIBLE
+                checkedOrderTv.text = "$index"
+            }
+
+            thumbIv.setOnClickListener {
+                if (fragment.isPhotoChecked(value)) {
+                    fragment.uncheckedPhoto(value)
+                    notifyDataSetChanged()
+                    fragment.updateToggleText()
+                    fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                } else {
+                    if (fragment.allowsToCheck()) {
+                        fragment.checkPhoto(value)
+                        notifyDataSetChanged()
+                        fragment.updateToggleText()
+                        fragment.mOnPhotoPickerListener?.onPhotosSelect(fragment.getAllCheckedPhotos())
+                    } else {
+                        fragment.showToast(fragment.getString(R.string.module_photo_picker_max_limit, fragment.mLimitCount))
+                    }
+                }
+            }
         }
     }
 
@@ -350,7 +462,7 @@ class PhotoPickerFragment : Fragment() {
         override fun doInBackground(vararg params: Void?): List<Album> {
             val fragment = mReference.get() ?: return listOf()
             val context = fragment.context ?: return listOf()
-            return PhotosRepository(context).listAlbums()
+            return PhotosRepository(context).listAlbums(fragment.mAllPhotosAlbum)
         }
 
         override fun onPostExecute(result: List<Album>) {

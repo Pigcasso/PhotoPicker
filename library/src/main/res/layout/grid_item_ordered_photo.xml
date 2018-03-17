@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.pigcasso.photopicker.SquareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_photo_picker_photo_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/module_photo_picker_photo_thumb"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/iv_photo_picker_photo_checked_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="4dp"
+        android:background="#f00"
+        android:padding="2dp"
+        android:textColor="#fff"
+        tools:text="520"/>
+
+</io.pigcasso.photopicker.SquareFrameLayout>
