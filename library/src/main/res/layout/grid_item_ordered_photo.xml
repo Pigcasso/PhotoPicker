@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="#000">
 
     <ImageView
         android:id="@+id/iv_photo_picker_photo_thumb"
@@ -19,9 +20,12 @@
         android:layout_gravity="end|top"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="4dp"
-        android:background="#f00"
-        android:padding="2dp"
-        android:textColor="#fff"
-        tools:text="520"/>
+        android:background="@drawable/ic_badge_checked_24dp"
+        android:gravity="center"
+        android:paddingEnd="3dp"
+        android:paddingStart="3dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        tools:text="0000"/>
 
 </io.pigcasso.photopicker.SquareFrameLayout>

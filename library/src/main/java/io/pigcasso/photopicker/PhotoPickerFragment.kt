@@ -441,9 +441,12 @@ class PhotoPickerFragment : Fragment() {
             val checkedOrderTv = viewHolder.findViewById<TextView>(R.id.iv_photo_picker_photo_checked_order)!!
             val index = fragment.indexOfPhoto(value)
             if (index == -1) {
-                checkedOrderTv.visibility = View.INVISIBLE
+                // checkedOrderTv.visibility = View.INVISIBLE
+                checkedOrderTv.text = ""
+                checkedOrderTv.setBackgroundResource(R.drawable.ic_badge_unchecked_24dp)
             } else {
-                checkedOrderTv.visibility = View.VISIBLE
+                // checkedOrderTv.visibility = View.VISIBLE
+                checkedOrderTv.setBackgroundResource(R.drawable.ic_badge_checked_24dp)
                 checkedOrderTv.text = "$index"
             }
 
