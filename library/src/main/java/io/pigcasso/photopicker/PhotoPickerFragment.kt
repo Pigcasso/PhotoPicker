@@ -260,7 +260,6 @@ class PhotoPickerFragment : Fragment() {
 
         popupWindow.setBackgroundDrawable(ColorDrawable(Color.WHITE))
         popupWindow.anchorView = view!!.findViewById(R.id.popup_anchor)
-        popupWindow.setContentWidth((gridView.height * 0.9).toInt())
         popupWindow.isModal = true
         popupWindow.setAdapter(mAlbumsAdapter)
         popupWindow.setOnItemClickListener { _, _, position, _ ->
