@@ -9,7 +9,7 @@
     <string name="module_photo_picker_unselected_all">取消全选</string>
     <string name="module_photo_picker_select_done">完成</string>
     <string name="module_photo_picker_select_photo_count">选择图片 %d</string>
-    <string name="module_photo_view_preview">预览</string>
+    <string name="module_photo_view_preview">预览(%d/%d)</string>
     <string name="module_photo_picker_read_external_storage_rationale">请求权限：读取你的相册</string>
     <string name="module_photo_picker_max_limit">最多选择%1$d张图片</string>
 </resources>

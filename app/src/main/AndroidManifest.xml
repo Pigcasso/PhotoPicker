@@ -19,9 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name="io.pigcasso.photopicker.PhotoPickerActivity"/>
-        <activity
-            android:name="io.pigcasso.photopicker.PhotoViewActivity"
-            android:label="@string/module_photo_view_preview"/>
+        <activity android:name="io.pigcasso.photopicker.PhotoViewActivity"/>
     </application>
 
 </manifest>

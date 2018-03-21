@@ -19,3 +19,5 @@ const val NO_LIMIT_COUNT = -1
 
 const val EXTRA_COUNTABLE = "extra.COUNTABLE"
 
+const val EXTRA_CURRENT_ITEM = "extra.CURRENT_ITEM"
+
