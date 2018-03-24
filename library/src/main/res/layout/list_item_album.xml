@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/iv_photo_picker_album_cover"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/album_cover_size"
+        android:layout_height="@dimen/album_cover_size"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/module_photo_picker_album_cover"

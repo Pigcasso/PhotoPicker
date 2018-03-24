@@ -1,6 +1,7 @@
 package io.pigcasso.photopicker
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,15 +9,14 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.ListPopupWindow
+import android.util.DisplayMetrics
 import android.view.*
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.PermissionRequest
-import java.io.File
 import java.lang.ref.WeakReference
 
 
@@ -76,7 +76,7 @@ class PhotoPickerFragment : Fragment() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAlbumsAdapter = AlbumsAdapter(arrayListOf())
+        mAlbumsAdapter = AlbumsAdapter(context!!, arrayListOf())
 
         mCheckedPhotos = if (savedInstanceState != null) {
             savedInstanceState.getStringArrayList(EXTRA_CHECKED_PHOTOS)
@@ -388,11 +388,11 @@ class PhotoPickerFragment : Fragment() {
     /**
      * 无序多选照片适配器
      */
-    private class UnorderedPhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_photo, photos) {
+    private class UnorderedPhotosAdapter(fragment: PhotoPickerFragment, photos: List<Photo>) : AbsPhotosAdapter(fragment, R.layout.grid_item_photo, photos) {
 
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
-            Glide.with(thumbIv).load(File(value.absolutePath)).into(thumbIv)
+            PhotoPicker.photoLoader.loadPhoto(thumbIv, value.absolutePath, itemSize, itemSize)
 
             val checkboxIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_checkbox)!!
             if (fragment.isPhotoChecked(value)) {
@@ -433,10 +433,11 @@ class PhotoPickerFragment : Fragment() {
     /**
      * 有序多选照片适配器
      */
-    private class OrderedPhotosAdapter(private val fragment: PhotoPickerFragment, photos: List<Photo>) : CommonAdapter<Photo>(R.layout.grid_item_ordered_photo, photos) {
+    private class OrderedPhotosAdapter(fragment: PhotoPickerFragment, photos: List<Photo>) : AbsPhotosAdapter(fragment, R.layout.grid_item_ordered_photo, photos) {
+        @SuppressLint("SetTextI18n")
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
-            Glide.with(thumbIv).load(File(value.absolutePath)).into(thumbIv)
+            PhotoPicker.photoLoader.loadPhoto(thumbIv, value.absolutePath, itemSize, itemSize)
 
             val checkedOrderTv = viewHolder.findViewById<TextView>(R.id.iv_photo_picker_photo_checked_order)!!
             val index = fragment.indexOfPhoto(value)
@@ -470,12 +471,27 @@ class PhotoPickerFragment : Fragment() {
         }
     }
 
-    private class AlbumsAdapter(albums: List<Album>) : CommonAdapter<Album>(R.layout.list_item_album, albums) {
+    private abstract class AbsPhotosAdapter(protected val fragment: PhotoPickerFragment, resource: Int, photos: List<Photo>) : CommonAdapter<Photo>(resource, photos) {
+        protected val itemSize: Int
+
+        init {
+            val dm = DisplayMetrics()
+            val activity = fragment.activity!!
+            activity.windowManager.defaultDisplay.getMetrics(dm)
+            val numColumns = activity.resources.getInteger(R.integer.grid_num_columns)
+            val horizontalSpacing = activity.resources.getDimensionPixelSize(R.dimen.grid_horizontal_spacing)
+            itemSize = (dm.widthPixels - (numColumns + 1) * horizontalSpacing) / numColumns
+        }
+    }
+
+    private class AlbumsAdapter(context: Context, albums: List<Album>) : CommonAdapter<Album>(R.layout.list_item_album, albums) {
         private var mCheckedPosition = -1
+
+        private val itemSize: Int = context.resources.getDimensionPixelSize(R.dimen.album_cover_size)
 
         override fun bindView(viewHolder: ViewHolder, value: Album, position: Int) {
             val coverIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_cover)!!
-            Glide.with(coverIv).load(File(value.photos.first().absolutePath)).into(coverIv)
+            PhotoPicker.photoLoader.loadPhoto(coverIv, value.photos.first().absolutePath, itemSize, itemSize)
 
             viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!.text = value.name
             viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!.text = "${value.photos.size}"

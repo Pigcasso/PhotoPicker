@@ -8,9 +8,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import com.github.chrisbanes.photoview.PhotoView
-import java.io.File
 
 /**
  * @author Zhu Liang
@@ -68,8 +66,7 @@ class PhotoViewActivity : AppCompatActivity() {
             val itemView = PhotoView(context)
             val value = mValues[position]
             container.addView(itemView)
-            Glide.with(container).load(File(value)).into(itemView)
-
+            PhotoPicker.photoLoader.loadPhoto(itemView, value, 0, 0)
             return itemView
         }
 

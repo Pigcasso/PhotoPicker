@@ -32,7 +32,6 @@
             android:id="@+id/tv_photo_picker_preview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
             android:gravity="center_vertical"
             android:text="@string/module_photo_picker_preview"/>
 
@@ -45,7 +44,6 @@
             android:id="@+id/tv_photo_picker_selected_toggle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
             android:gravity="center_vertical"
             android:text="@string/module_photo_picker_select_all"/>
     </LinearLayout>
@@ -62,9 +60,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/popup_anchor"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3"
-        android:verticalSpacing="2dp"/>
+        android:horizontalSpacing="@dimen/grid_horizontal_spacing"
+        android:numColumns="@integer/grid_num_columns"
+        android:verticalSpacing="@dimen/grid_vertical_spacing"/>
 
     <RelativeLayout
         android:id="@+id/rv_photo_picker_indicator"

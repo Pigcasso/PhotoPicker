@@ -4,4 +4,7 @@
     <dimen name="badge_size_height">24dp</dimen>
     <dimen name="badge_corners_radius">24dp</dimen>
     <dimen name="badge_stroke_width">2dp</dimen>
+    <dimen name="grid_horizontal_spacing">2dp</dimen>
+    <dimen name="grid_vertical_spacing">2dp</dimen>
+    <dimen name="album_cover_size">48dp</dimen>
 </resources>
