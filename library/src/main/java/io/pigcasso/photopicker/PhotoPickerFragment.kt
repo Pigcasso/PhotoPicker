@@ -447,7 +447,7 @@ class PhotoPickerFragment : Fragment() {
             } else {
                 // checkedOrderTv.visibility = View.VISIBLE
                 checkedOrderTv.setBackgroundResource(R.drawable.ic_badge_checked_24dp)
-                checkedOrderTv.text = "$index"
+                checkedOrderTv.text = "${index + 1}"
             }
 
             thumbIv.setOnClickListener {
