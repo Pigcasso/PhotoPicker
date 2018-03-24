@@ -32,7 +32,7 @@ ext {
     minSdkVersion = 17
     targetSdkVersion = 27
 
-    supportSdkVersion = '27.0.2'
+    supportSdkVersion = '27.1.0'
     constraintLayoutVersion = '1.0.2'
     glideVersion = '4.6.1'
     easypermissionsVersion = "1.1.3"
