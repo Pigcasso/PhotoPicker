@@ -25,7 +25,7 @@ class PhotosRepository(private val context: Context) {
         val selection = MediaStore.Images.ImageColumns.MIME_TYPE + " = ? or " +
                 MediaStore.Images.ImageColumns.MIME_TYPE + "=?"
         val selectionArgs = arrayOf("image/jpeg", "image/png")
-        val sortOrder = null
+        val sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC"
         val cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)
         val dirPaths = HashMap<String, Album>()
 
