@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mCountableSwitch: Switch
     private lateinit var mLimitCountEt: EditText
     private lateinit var mPreviewSwitch: Switch
+    private lateinit var mSelectableAllSwitch: Switch
 
     companion object {
         private const val RC_PHOTO_PICKER = 1
@@ -39,9 +40,11 @@ class MainActivity : AppCompatActivity() {
         mCountableSwitch = findViewById(R.id.switch_sample_countable)
         mLimitCountEt = findViewById(R.id.et_sample_limit_count)
         mPreviewSwitch = findViewById(R.id.switch_sample_preview)
+        mSelectableAllSwitch = findViewById(R.id.switch_sample_select_all)
 
         mMultiChoiceNoUpperLimitSwitch.setOnCheckedChangeListener({ _, isChecked ->
             mLimitCountEt.isEnabled = !isChecked
+            mSelectableAllSwitch.isChecked = isChecked
         })
 
     }
@@ -64,23 +67,23 @@ class MainActivity : AppCompatActivity() {
 
         val allPhotosAlbum = mAllPhotosAlbumSwitch.isChecked
         val choiceMode: Int
-        val countable: Boolean
         val limitCount: Int
+        val allowSelectAll: Boolean
         if (mMultiChoiceNoUpperLimitSwitch.isChecked) {
             choiceMode = CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
-            countable = false
             limitCount = NO_LIMIT_COUNT
+            allowSelectAll = mSelectableAllSwitch.isChecked
         } else {
-            if (mLimitCountEt.text.isEmpty()) {
-                Toast.makeText(this, "请输入选择照片的上限！！", Toast.LENGTH_SHORT).show()
-                return
+            limitCount = if (mLimitCountEt.text.isEmpty()) {
+                9
+            } else {
+                mLimitCountEt.text.toString().toInt()
             }
             choiceMode = CHOICE_MODE_MULTIPLE_UPPER_LIMIT
-            countable = mCountableSwitch.isChecked
-            limitCount = mLimitCountEt.text.toString().toInt()
+            allowSelectAll = false
         }
 
-        val intent = PhotoPickerActivity.multiChoice(this, allPhotosAlbum, choiceMode, limitCount, countable, mPreviewSwitch.isChecked)
+        val intent = PhotoPickerActivity.multiChoice(this, allPhotosAlbum, choiceMode, limitCount, mCountableSwitch.isChecked, mPreviewSwitch.isChecked, allowSelectAll)
         startActivityForResult(intent, RC_PHOTO_PICKER)
     }
 }

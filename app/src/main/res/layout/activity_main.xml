@@ -48,6 +48,16 @@
         android:text="多选（无上限）"/>
 
     <Switch
+        android:id="@+id/switch_sample_select_all"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:checked="true"
+        android:text="是否全选当前文件夹下的图片"/>
+
+    <Switch
         android:id="@+id/switch_sample_countable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,16 +65,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="是否显示选中次序"/>
-
-    <Button
-        android:id="@+id/btn_sample_multi_choice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onMultiChoice"
-        android:text="多选"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,10 +88,20 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:enabled="false"
-            android:hint="最大选择照片数"
+            android:hint="最大选择照片数（默认9张）"
             android:inputType="number"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_sample_multi_choice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onMultiChoice"
+        android:text="多选"/>
 
 
     <TextView

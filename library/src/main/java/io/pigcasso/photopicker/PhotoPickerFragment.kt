@@ -52,18 +52,24 @@ class PhotoPickerFragment : Fragment() {
      */
     private var mPreview: Boolean = false
 
+    /**
+     * 多选-无上限模式下，是否允许全选当前文件夹下的图片
+     */
+    private var mSelectableAll: Boolean = false
+
     companion object {
         private const val PERMISSIONS = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val RC_READ_EXTERNAL_STORAGE = 1
         private const val EXTRA_CHECKED_PHOTOS = "extra.CHECKED_PHOTOS"
 
-        fun newInstance(allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean): PhotoPickerFragment {
+        fun newInstance(allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean, selectableAll: Boolean): PhotoPickerFragment {
             val arguments = Bundle()
             arguments.putBoolean(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
             arguments.putInt(EXTRA_CHOICE_MODE, choiceMode)
             arguments.putInt(EXTRA_LIMIT_COUNT, limitCount)
             arguments.putBoolean(EXTRA_COUNTABLE, countable)
             arguments.putBoolean(EXTRA_PREVIEW, preview)
+            arguments.putBoolean(EXTRA_SELECTABLE_ALL, selectableAll)
 
             val fragment = PhotoPickerFragment()
             fragment.arguments = arguments
@@ -110,6 +116,8 @@ class PhotoPickerFragment : Fragment() {
 
         mPreview = arguments!!.getBoolean(EXTRA_PREVIEW, true)
 
+        mSelectableAll = arguments!!.getBoolean(EXTRA_SELECTABLE_ALL, false)
+
         setHasOptionsMenu(true)
 
     }
@@ -124,7 +132,13 @@ class PhotoPickerFragment : Fragment() {
         findViewById<View>(R.id.tv_photo_picker_selected_album_label)!!.setOnClickListener {
             showAlbumPicker()
         }
-        findViewById<View>(R.id.tv_photo_picker_selected_toggle)!!.setOnClickListener {
+        val selectedToggle = findViewById<View>(R.id.tv_photo_picker_selected_toggle)!!
+        selectedToggle.visibility = if (mSelectableAll) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+        selectedToggle.setOnClickListener {
             toggleCheckAll()
         }
         val previewView = findViewById<View>(R.id.tv_photo_picker_preview)!!

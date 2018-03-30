@@ -19,7 +19,7 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
             return intent
         }
 
-        fun multiChoice(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean): Intent {
+        fun multiChoice(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean, selectableAll: Boolean): Intent {
             check(CHOICE_MODE_MULTIPLE_UPPER_LIMIT == choiceMode || CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == choiceMode)
             val intent = Intent(context, PhotoPickerActivity::class.java)
             intent.putExtra(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
@@ -27,6 +27,7 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
             intent.putExtra(EXTRA_LIMIT_COUNT, limitCount)
             intent.putExtra(EXTRA_COUNTABLE, countable)
             intent.putExtra(EXTRA_PREVIEW, preview)
+            intent.putExtra(EXTRA_SELECTABLE_ALL, selectableAll)
             return intent
         }
     }
@@ -45,7 +46,8 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
                     intent!!.getIntExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT),
                     intent!!.getIntExtra(EXTRA_LIMIT_COUNT, NO_LIMIT_COUNT),
                     intent!!.getBooleanExtra(EXTRA_COUNTABLE, false),
-                    intent!!.getBooleanExtra(EXTRA_PREVIEW, true))
+                    intent!!.getBooleanExtra(EXTRA_PREVIEW, true),
+                    intent!!.getBooleanExtra(EXTRA_SELECTABLE_ALL, false))
             supportFragmentManager.beginTransaction().add(R.id.contentFrame, fragment).commit()
         }
     }
