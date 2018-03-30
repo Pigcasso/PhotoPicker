@@ -253,7 +253,11 @@ class PhotoPickerFragment : Fragment() {
                 }
             }
             CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT -> {
-                mPhotosAdapter = UnorderedPhotosAdapter(this, photos)
+                mPhotosAdapter = if (mCountable) {
+                    OrderedPhotosAdapter(this, photos)
+                } else {
+                    UnorderedPhotosAdapter(this, photos)
+                }
             }
         }
         gridView?.adapter = mPhotosAdapter
