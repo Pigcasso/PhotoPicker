@@ -11,20 +11,22 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
     companion object {
         const val EXTRA_RESULT_SELECTION = "extra_result_selection"
 
-        fun singleChoice(context: Context, allPhotosAlbum: Boolean): Intent {
+        fun singleChoice(context: Context, allPhotosAlbum: Boolean, preview: Boolean): Intent {
             val intent = Intent(context, PhotoPickerActivity::class.java)
             intent.putExtra(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
             intent.putExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_SINGLE)
+            intent.putExtra(EXTRA_PREVIEW, preview)
             return intent
         }
 
-        fun multiChoice(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean): Intent {
+        fun multiChoice(context: Context, allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean): Intent {
             check(CHOICE_MODE_MULTIPLE_UPPER_LIMIT == choiceMode || CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == choiceMode)
             val intent = Intent(context, PhotoPickerActivity::class.java)
             intent.putExtra(EXTRA_ALL_PHOTOS_ALBUM, allPhotosAlbum)
             intent.putExtra(EXTRA_CHOICE_MODE, choiceMode)
             intent.putExtra(EXTRA_LIMIT_COUNT, limitCount)
             intent.putExtra(EXTRA_COUNTABLE, countable)
+            intent.putExtra(EXTRA_PREVIEW, preview)
             return intent
         }
     }
@@ -42,7 +44,8 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
                     intent!!.getBooleanExtra(EXTRA_ALL_PHOTOS_ALBUM, true),
                     intent!!.getIntExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT),
                     intent!!.getIntExtra(EXTRA_LIMIT_COUNT, NO_LIMIT_COUNT),
-                    intent!!.getBooleanExtra(EXTRA_COUNTABLE, false))
+                    intent!!.getBooleanExtra(EXTRA_COUNTABLE, false),
+                    intent!!.getBooleanExtra(EXTRA_PREVIEW, true))
             supportFragmentManager.beginTransaction().add(R.id.contentFrame, fragment).commit()
         }
     }

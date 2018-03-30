@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mMultiChoiceNoUpperLimitSwitch: Switch
     private lateinit var mCountableSwitch: Switch
     private lateinit var mLimitCountEt: EditText
+    private lateinit var mPreviewSwitch: Switch
 
     companion object {
         private const val RC_PHOTO_PICKER = 1
@@ -37,9 +38,9 @@ class MainActivity : AppCompatActivity() {
         mMultiChoiceNoUpperLimitSwitch = findViewById(R.id.switch_sample_multi_choice_no_upper_limit)
         mCountableSwitch = findViewById(R.id.switch_sample_countable)
         mLimitCountEt = findViewById(R.id.et_sample_limit_count)
+        mPreviewSwitch = findViewById(R.id.switch_sample_preview)
 
         mMultiChoiceNoUpperLimitSwitch.setOnCheckedChangeListener({ _, isChecked ->
-            mCountableSwitch.isEnabled = !isChecked
             mLimitCountEt.isEnabled = !isChecked
         })
 
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     fun onSingleChoice(view: View) {
         val allPhotosAlbum = mAllPhotosAlbumSwitch.isChecked
 
-        val intent = PhotoPickerActivity.singleChoice(this, allPhotosAlbum)
+        val intent = PhotoPickerActivity.singleChoice(this, allPhotosAlbum, mPreviewSwitch.isChecked)
         startActivityForResult(intent, RC_PHOTO_PICKER)
     }
 
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             limitCount = mLimitCountEt.text.toString().toInt()
         }
 
-        val intent = PhotoPickerActivity.multiChoice(this, allPhotosAlbum, choiceMode, limitCount, countable)
+        val intent = PhotoPickerActivity.multiChoice(this, allPhotosAlbum, choiceMode, limitCount, countable, mPreviewSwitch.isChecked)
         startActivityForResult(intent, RC_PHOTO_PICKER)
     }
 }

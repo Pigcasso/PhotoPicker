@@ -52,7 +52,7 @@ class PhotosRepository(private val context: Context) {
         }
 
         if (allPhotos.isNotEmpty()) {
-            albums.add(0, Album("All", allPhotos))
+            albums.add(0, Album(context.resources.getString(R.string.module_photo_picker_all_photos), allPhotos))
         }
 
         cursor.close()

@@ -21,3 +21,4 @@ const val EXTRA_COUNTABLE = "extra.COUNTABLE"
 
 const val EXTRA_CURRENT_ITEM = "extra.CURRENT_ITEM"
 
+const val EXTRA_PREVIEW = "extra.PREVIEW"
