@@ -7,20 +7,19 @@
     android:background="?android:windowBackground">
 
     <LinearLayout
-        android:id="@+id/rv_photo_picker_bottom_bar"
+        android:id="@+id/ll_photo_picker_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:minHeight="56dp"
         android:orientation="horizontal"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp">
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:id="@+id/tv_photo_picker_selected_album_label"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            style="@style/BottomBarTextView"
             android:drawableEnd="@drawable/ic_arrow_drop_up_black_24dp"
-            android:gravity="center_vertical"
             tools:text="照片"/>
 
         <android.support.v4.widget.Space
@@ -30,9 +29,7 @@
 
         <TextView
             android:id="@+id/tv_photo_picker_preview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            style="@style/BottomBarTextView"
             android:text="@string/module_photo_picker_preview"/>
 
         <android.support.v4.widget.Space
@@ -42,9 +39,7 @@
 
         <TextView
             android:id="@+id/tv_photo_picker_selected_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            style="@style/BottomBarTextView"
             android:text="@string/module_photo_picker_select_all"/>
     </LinearLayout>
 
@@ -53,7 +48,7 @@
         android:id="@+id/popup_anchor"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_above="@+id/rv_photo_picker_bottom_bar"/>
+        android:layout_above="@+id/ll_photo_picker_bottom_bar"/>
 
     <GridView
         android:id="@+id/gridView"

@@ -6,5 +6,5 @@
     <dimen name="badge_stroke_width">2dp</dimen>
     <dimen name="grid_horizontal_spacing">2dp</dimen>
     <dimen name="grid_vertical_spacing">2dp</dimen>
-    <dimen name="album_cover_size">48dp</dimen>
+    <dimen name="album_cover_size">72dp</dimen>
 </resources>

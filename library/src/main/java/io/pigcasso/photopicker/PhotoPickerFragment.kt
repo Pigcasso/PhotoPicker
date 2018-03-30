@@ -123,6 +123,8 @@ class PhotoPickerFragment : Fragment() {
             showPhotoPreview()
         }
 
+        initThemeConfig()
+
         onPhotosSelect()
         updateToggleText()
     }
@@ -190,6 +192,19 @@ class PhotoPickerFragment : Fragment() {
                 statusIndicator.visibility = View.VISIBLE
             }
         })
+    }
+
+    private fun initThemeConfig() {
+        val themeConfig = PhotoPicker.themeConfig
+        // 底部导航条背景色
+        findViewById<View>(R.id.ll_photo_picker_bottom_bar)!!.setBackgroundColor(themeConfig.bottomBarBackgroundColor)
+        // 底部导航条文字颜色
+        val albumLabelText = findViewById<TextView>(R.id.tv_photo_picker_selected_album_label)!!
+        findViewById<TextView>(R.id.tv_photo_picker_preview)!!.setTextColor(themeConfig.bottomBarTextColor)
+        findViewById<TextView>(R.id.tv_photo_picker_selected_toggle)!!.setTextColor(themeConfig.bottomBarTextColor)
+        albumLabelText.setTextColor(themeConfig.bottomBarTextColor)
+        val arrowDrawable = ThemeConfig.tint(context!!, R.drawable.ic_arrow_drop_up_black_24dp, PhotoPicker.themeConfig.arrowDropColor)
+        albumLabelText.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDrawable, null)
     }
 
     private fun loadAlbums() {
@@ -390,20 +405,23 @@ class PhotoPickerFragment : Fragment() {
      */
     private class UnorderedPhotosAdapter(fragment: PhotoPickerFragment, photos: List<Photo>) : AbsPhotosAdapter(fragment, R.layout.grid_item_photo, photos) {
 
+        val checkboxOutlineDrawable = ThemeConfig.tint(fragment.context!!, R.drawable.ic_check_box_outline_blank_black_24dp, PhotoPicker.themeConfig.checkboxOutlineColor)
+        val checkboxDrawable = ThemeConfig.tint(fragment.context!!, R.drawable.ic_check_box_black_24dp, PhotoPicker.themeConfig.checkboxColor)
+
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
             PhotoPicker.photoLoader.loadPhoto(thumbIv, value.absolutePath, itemSize, itemSize)
 
             val checkboxIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_checkbox)!!
             if (fragment.isPhotoChecked(value)) {
-                checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                checkboxIv.setImageDrawable(checkboxDrawable)
             } else {
-                checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
+                checkboxIv.setImageDrawable(checkboxOutlineDrawable)
             }
             thumbIv.setOnClickListener({
                 if (fragment.isPhotoChecked(value)) {
                     fragment.uncheckedPhoto(value)
-                    checkboxIv.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp)
+                    checkboxIv.setImageDrawable(checkboxOutlineDrawable)
                     fragment.updateToggleText()
                     fragment.onPhotosSelect()
                 } else {
@@ -411,7 +429,7 @@ class PhotoPickerFragment : Fragment() {
                             || CHOICE_MODE_MULTIPLE_UPPER_LIMIT == fragment.mChoiceMode) {
                         if (fragment.allowsToCheck()) {
                             fragment.checkPhoto(value)
-                            checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                            checkboxIv.setImageDrawable(checkboxDrawable)
                             fragment.updateToggleText()
                             fragment.onPhotosSelect()
                         } else {
@@ -421,7 +439,7 @@ class PhotoPickerFragment : Fragment() {
                         fragment.mCheckedPhotos.clear()
                         fragment.checkPhoto(value)
                         notifyDataSetChanged()
-                        checkboxIv.setImageResource(R.drawable.ic_check_box_black_24dp)
+                        checkboxIv.setImageDrawable(checkboxDrawable)
                         fragment.updateToggleText()
                         fragment.onPhotosSelect()
                     }
@@ -444,10 +462,10 @@ class PhotoPickerFragment : Fragment() {
             if (index == -1) {
                 // checkedOrderTv.visibility = View.INVISIBLE
                 checkedOrderTv.text = ""
-                checkedOrderTv.setBackgroundResource(R.drawable.ic_badge_unchecked_24dp)
+                checkedOrderTv.setBackgroundResource(PhotoPicker.themeConfig.orderedUncheckedBackground)
             } else {
                 // checkedOrderTv.visibility = View.VISIBLE
-                checkedOrderTv.setBackgroundResource(R.drawable.ic_badge_checked_24dp)
+                checkedOrderTv.setBackgroundResource(PhotoPicker.themeConfig.orderedCheckedBackground)
                 checkedOrderTv.text = "${index + 1}"
             }
 
@@ -495,6 +513,8 @@ class PhotoPickerFragment : Fragment() {
 
             viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!.text = value.name
             viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!.text = "${value.photos.size}"
+
+            viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_checkbox)?.setColorFilter(PhotoPicker.themeConfig.radioCheckedColor)
 
             if (mCheckedPosition == position) {
                 viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_checkbox)?.visibility = View.VISIBLE

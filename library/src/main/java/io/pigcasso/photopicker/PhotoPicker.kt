@@ -7,5 +7,6 @@ class PhotoPicker {
 
     companion object {
         lateinit var photoLoader: PhotoLoader
+        var themeConfig = ThemeConfig()
     }
 }
