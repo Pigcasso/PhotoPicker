@@ -5,26 +5,26 @@ ext {
     ]
 
     bintray = [
-            version       : "1.0.0", // 项目本地发布的版本号
+            version       : "0.1.0-alpha", // 项目本地发布的版本号
             group         : "com.yanzhenjie", // 项目的group名，第一次定好以后不能改
 
-            siteUrl       : 'https://github.com/yanzhenjie/StatusView', // 项目开源地址
-            gitUrl        : 'git@github.com:yanzhenjie/StatusView.git', // 项目git克隆地址
+            siteUrl       : 'https://github.com/Pigcasso/PhotoPicker', // 项目开源地址
+            gitUrl        : 'https://github.com/Pigcasso/PhotoPicker.git', // 项目git克隆地址
 
             packaging     : 'aar',
-            name          : 'StatusView', // 项目名，随意
-            description   : 'StatusView for android', // 项目描述，随意
+            name          : 'PhotoPicker', // 项目名，随意
+            description   : 'Android Matrial Design photo picker', // 项目描述，随意
 
             licenseName   : 'The Apache Software License, Version 2.0', // 开源协议
             licenseUrl    : 'http://www.apache.org/licenses/LICENSE-2.0.txt', // 开源协议地址
 
-            developerId   : 'yanzhenjie', // 开发者id
-            developerName : 'yanzhenjie', // 开发者姓名
-            developerEmail: 'smallajax@foxmail.com', // 开发者邮箱
+            developerId   : 'julianchu', // 开发者id
+            developerName : 'julianchu', // 开发者姓名
+            developerEmail: 'julianchu1989@gmail.com', // 开发者邮箱
 
-            binrayLibrary : "StatusView", // 项目在bintray上看到的名称
+            binrayLibrary : "PhotoPicker", // 项目在bintray上看到的名称
             bintrayRepo   : "maven", // 发布到自己在bintray的哪个仓库中，一般默认maven
-            bintrayUser   : 'yolanda', // bintray的用户名
+            bintrayUser   : 'julianchu', // bintray的用户名
             bintrayLicense: "Apache-2.0" // 在bintray上采用的开源协议
     ]
 }
