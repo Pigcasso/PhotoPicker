@@ -14,16 +14,14 @@ import android.view.*
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import pub.devrel.easypermissions.PermissionRequest
 import java.lang.ref.WeakReference
 
 
 /**
  * @author Zhu Liang
  */
-class PhotoPickerFragment : Fragment() {
+class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var mSelectedAlbum: Album? = null
     private lateinit var mAlbumsAdapter: AlbumsAdapter
@@ -155,6 +153,12 @@ class PhotoPickerFragment : Fragment() {
 
         onPhotosSelect()
         updateToggleText()
+
+        if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
+            loadAlbums()
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.module_photo_picker_read_external_storage_rationale), RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -173,15 +177,6 @@ class PhotoPickerFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
-            loadAlbums()
-        } else {
-            EasyPermissions.requestPermissions(PermissionRequest.Builder(this, RC_READ_EXTERNAL_STORAGE, PERMISSIONS).build())
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -194,17 +189,15 @@ class PhotoPickerFragment : Fragment() {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    @AfterPermissionGranted(RC_READ_EXTERNAL_STORAGE)
-    private fun requestPermissions() {
-        if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
-            loadAlbums()
-        } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.module_photo_picker_read_external_storage_rationale),
-                    RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
-        }
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        setStatusIndicator(getString(R.string.module_photo_picker_read_external_storage_denied))
     }
 
-    fun setLoadingIndicator(active: Boolean) {
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        loadAlbums()
+    }
+
+    private fun setLoadingIndicator(active: Boolean) {
         if (view == null) return
         val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
         val loadingIndicator = findViewById<View>(R.id.loadingIndicator)!!
@@ -219,6 +212,19 @@ class PhotoPickerFragment : Fragment() {
                 loadingIndicator.visibility = View.INVISIBLE
                 statusIndicator.visibility = View.VISIBLE
             }
+        })
+    }
+
+    private fun setStatusIndicator(statusText: String) {
+        if (view == null) return
+        val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
+        val loadingIndicator = findViewById<View>(R.id.loadingIndicator)!!
+        val statusIndicator = findViewById<TextView>(R.id.statusIndicator)!!
+        indicatorRv.post({
+            indicatorRv.visibility = View.VISIBLE
+            loadingIndicator.visibility = View.INVISIBLE
+            statusIndicator.visibility = View.VISIBLE
+            statusIndicator.text = statusText
         })
     }
 

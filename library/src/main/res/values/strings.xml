@@ -12,4 +12,5 @@
     <string name="module_photo_picker_read_external_storage_rationale">请求权限：读取你的相册</string>
     <string name="module_photo_picker_max_limit">最多选择%1$d张图片</string>
     <string name="module_photo_picker_all_photos">所有图片</string>
+    <string name="module_photo_picker_read_external_storage_denied">无法获取图片</string>
 </resources>
