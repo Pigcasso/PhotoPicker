@@ -40,3 +40,5 @@ dependencies {
     implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
     implementation "com.github.chrisbanes:PhotoView:$photoViewVersion"
 }
+
+apply from: 'https://github.com/yanzhenjie/bintray/blob/master/bintray.gradle?raw=true'
