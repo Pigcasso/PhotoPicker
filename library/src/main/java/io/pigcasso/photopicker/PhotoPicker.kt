@@ -6,7 +6,7 @@ package io.pigcasso.photopicker
 class PhotoPicker {
 
     companion object {
-        lateinit var photoLoader: PhotoLoader
+        var photoLoader: PhotoLoader = DefaultPhotoLoader
         var themeConfig = ThemeConfig()
     }
 }

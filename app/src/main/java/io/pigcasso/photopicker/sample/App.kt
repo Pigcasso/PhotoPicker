@@ -11,7 +11,7 @@ import io.pigcasso.photopicker.ThemeConfig
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        PhotoPicker.photoLoader = GlidePhotoLoader()
+        // PhotoPicker.photoLoader = GlidePhotoLoader()
         PhotoPicker.themeConfig = ThemeConfig().apply {
             bottomBarBackgroundColor = ContextCompat.getColor(this@App, R.color.colorPrimary)
             checkboxOutlineColor = ContextCompat.getColor(this@App, R.color.colorAccent)

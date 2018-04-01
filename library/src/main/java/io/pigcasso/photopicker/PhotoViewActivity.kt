@@ -61,12 +61,21 @@ class PhotoViewActivity : AppCompatActivity() {
 
     internal class PhotoDetailsAdapter(private val context: Context, private val mValues: ArrayList<String>) : PagerAdapter() {
 
+        private val mViewWidth: Int
+        private val mViewHeight: Int
+
+        init {
+            val dm = context.resources.displayMetrics
+            mViewWidth = dm.widthPixels
+            mViewHeight = dm.heightPixels
+        }
+
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
             val itemView = PhotoView(context)
             val value = mValues[position]
             container.addView(itemView)
-            PhotoPicker.photoLoader.loadPhoto(itemView, value, 0, 0)
+            PhotoPicker.photoLoader.loadPhoto(itemView, value, mViewWidth, mViewHeight)
             return itemView
         }
 
