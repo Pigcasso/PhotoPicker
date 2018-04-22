@@ -252,10 +252,10 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     fun showNoAlbums() {
-        val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)
-        indicatorRv?.post({
-            indicatorRv.visibility = View.VISIBLE
-        })
+        val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
+        val bottomBar = findViewById<View>(R.id.ll_photo_picker_bottom_bar)!!
+        indicatorRv.visibility = View.VISIBLE
+        bottomBar.visibility = View.INVISIBLE
     }
 
     fun showAlbums(albums: List<Album>) {
