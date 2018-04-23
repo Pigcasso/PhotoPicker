@@ -5,7 +5,7 @@ ext {
     ]
 
     bintray = [
-            version       : "0.1.0-alpha", // 项目本地发布的版本号
+            version       : "0.1.1-alpha", // 项目本地发布的版本号
             group         : "com.yanzhenjie", // 项目的group名，第一次定好以后不能改
 
             siteUrl       : 'https://github.com/Pigcasso/PhotoPicker', // 项目开源地址
