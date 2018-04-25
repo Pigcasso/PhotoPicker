@@ -5,11 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import io.pigcasso.photopicker.api.Action
 
 class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
 
     companion object {
         const val EXTRA_RESULT_SELECTION = "extra_result_selection"
+
+        var result: Action<ArrayList<String>>? = null
+        var requestCode: Int = -1
+        var cancel: Action<String>? = null
 
         fun singleChoice(context: Context, allPhotosAlbum: Boolean, preview: Boolean): Intent {
             val intent = Intent(context, PhotoPickerActivity::class.java)
@@ -60,9 +65,22 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
     }
 
     override fun onSelectedResult(photoPaths: ArrayList<String>) {
-        val data = Intent()
-        data.putStringArrayListExtra(EXTRA_RESULT_SELECTION, photoPaths)
-        setResult(Activity.RESULT_OK, data)
+        if (result != null) {
+            result!!.onAction(requestCode, photoPaths)
+            setResult(Activity.RESULT_OK)
+        } else {
+            val data = Intent()
+            data.putStringArrayListExtra(EXTRA_RESULT_SELECTION, photoPaths)
+            setResult(Activity.RESULT_OK, data)
+        }
         finish()
+    }
+
+    override fun onDestroy() {
+        requestCode = -1
+        result = null
+        cancel = null
+
+        super.onDestroy()
     }
 }
