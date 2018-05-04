@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="checkbox_main_all_photos_album" type="id" />
+    <item name="checkbox_main_preview" type="id" />
+    <item name="menu_choice_done" type="id" />
+    <item name="radio_group_main_choice_mode" type="id" />
+    <item name="radio_button_main_choice_mode_single" type="id" />
+    <item name="radio_button_main_choice_mode_multiple_upper_limit" type="id" />
+    <item name="radio_button_main_choice_mode_multiple_no_upper_limit" type="id" />
+    <item name="ll_main_limit_count_group" type="id" />
+    <item name="et_main_limit_count" type="id" />
+    <item name="checkbox_main_countable" type="id" />
+    <item name="checkbox_main_selectable_all" type="id" />
+    <item name="gv_main_results" type="id" />
+    <item name="iv_main_photo_thumb" type="id" />
+</resources>

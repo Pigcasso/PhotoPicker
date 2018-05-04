@@ -25,6 +25,7 @@ class PhotoSingleWrapper(context: Context) : BasicWrapper<ArrayList<String>, Str
         PhotoPickerActivity.requestCode = mRequestCode
         PhotoPickerActivity.result = mResult
         PhotoPickerActivity.cancel = mCancel
-        PhotoPickerActivity.singleChoice(mContext, allPhotosAlbum, preview)
+        val intent = PhotoPickerActivity.singleChoice(mContext, allPhotosAlbum, preview)
+        mContext.startActivity(intent)
     }
 }

@@ -408,8 +408,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun showPhotoPreview() {
         if (context == null) return
-        val starter = PhotoViewActivity.makeIntent(context!!, getAllCheckedPhotos())
-        startActivity(starter)
+        mOnPhotoPickerListener?.onShowPhotoDetails(getAllCheckedPhotos())
     }
 
     /**
@@ -617,11 +616,16 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         /**
          * 更新选中的图片时回调
          */
-        fun onPhotosSelect(photoPaths: List<String>)
+        fun onPhotosSelect(photoPaths: ArrayList<String>)
 
         /**
          * 点击完成时回调
          */
         fun onSelectedResult(photoPaths: ArrayList<String>)
+
+        /**
+         * 查看选中图片细节
+         */
+        fun onShowPhotoDetails(photosPath: ArrayList<String>)
     }
 }

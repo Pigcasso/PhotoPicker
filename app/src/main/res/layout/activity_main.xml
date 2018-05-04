@@ -1,125 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
     tools:context=".MainActivity">
 
-    <Switch
-        android:id="@+id/switch_sample_all_photos_album"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:checked="true"
-        android:text="是否显示所有照片相册"/>
-
-    <Switch
-        android:id="@+id/switch_sample_preview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:checked="true"
-        android:text="是否预览选中的图片"/>
-
     <TextView
-        android:id="@+id/tv_sample_multi_choice_label"
+        style="@style/Sample.Title"
+        android:text="@string/module_main_choice_mode" />
+
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:gravity="center_horizontal"
-        android:text="多选"/>
+        android:layout_height="wrap_content">
 
-
-    <Switch
-        android:id="@+id/switch_sample_multi_choice_no_upper_limit"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:checked="true"
-        android:text="多选（无上限）"/>
-
-    <Switch
-        android:id="@+id/switch_sample_select_all"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:checked="true"
-        android:text="是否全选当前文件夹下的图片"/>
-
-    <Switch
-        android:id="@+id/switch_sample_countable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="是否显示选中次序"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_sample_limit_count_label"
+        <RadioGroup
+            android:id="@id/radio_group_main_choice_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="照片数："/>
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@id/radio_button_main_choice_mode_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/module_main_single_choice_mode" />
+
+            <RadioButton
+                android:id="@id/radio_button_main_choice_mode_multiple_upper_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/multiple_choice_upper_limit" />
+
+            <RadioButton
+                android:id="@id/radio_button_main_choice_mode_multiple_no_upper_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/multiple_choice_no_limit_upper" />
+        </RadioGroup>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@id/ll_main_limit_count_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Sample.Title"
+            android:text="@string/module_main_limit_count_title" />
 
         <EditText
-            android:id="@+id/et_sample_limit_count"
-            android:layout_width="match_parent"
+            android:id="@id/et_main_limit_count"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:enabled="false"
-            android:hint="最大选择照片数（默认9张）"
-            android:inputType="number"/>
-
+            android:hint="@string/multiple_choice_limit_count"
+            android:inputType="number"
+            android:minWidth="100dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_sample_multi_choice"
+    <TextView
+        style="@style/Sample.Title"
+        android:text="@string/module_main_options_title" />
+
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onMultiChoice"
-        android:text="多选"/>
+        android:columnCount="2">
 
+        <CheckBox
+            android:id="@id/checkbox_main_all_photos_album"
+            style="@style/Sample.CheckBox"
+            android:text="@string/single_choice_all_photos_album" />
+
+        <CheckBox
+            android:id="@id/checkbox_main_preview"
+            style="@style/Sample.CheckBox"
+            android:text="@string/module_main_preview" />
+
+        <CheckBox
+            android:id="@id/checkbox_main_countable"
+            style="@style/Sample.CheckBox"
+            android:text="@string/module_main_countable" />
+
+        <CheckBox
+            android:id="@id/checkbox_main_selectable_all"
+            style="@style/Sample.CheckBox"
+            android:text="@string/multiple_choice_selectable_all" />
+
+    </GridLayout>
 
     <TextView
-        android:id="@+id/tv_sample_single_choice_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:text="单选"/>
+        style="@style/Sample.Title"
+        android:text="@string/module_main_results" />
 
-    <Button
-        android:id="@+id/btn_sample_single_choice"
+    <GridView
+        android:id="@id/gv_main_results"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onSingleChoice"
-        android:text="单选"/>
+        android:layout_height="match_parent"
+        android:numColumns="@integer/grid_num_columns" />
 
 </LinearLayout>

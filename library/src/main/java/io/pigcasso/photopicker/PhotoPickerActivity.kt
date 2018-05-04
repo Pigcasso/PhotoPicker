@@ -57,13 +57,21 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         }
     }
 
+    override fun onBackPressed() {
+        cancel?.onAction(requestCode, "User canceled.")
+        super.onBackPressed()
+    }
+
     /**
      * 这个回调仅仅用于更新标题栏
      */
-    override fun onPhotosSelect(photoPaths: List<String>) {
+    override fun onPhotosSelect(photoPaths: ArrayList<String>) {
         supportActionBar?.title = getString(R.string.module_photo_picker_select_photo_count, photoPaths.size)
     }
 
+    /**
+     * 点击完成时回调
+     */
     override fun onSelectedResult(photoPaths: ArrayList<String>) {
         if (result != null) {
             result!!.onAction(requestCode, photoPaths)
@@ -76,11 +84,19 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         finish()
     }
 
-    override fun onDestroy() {
+    /**
+     * 查看选中图片细节
+     */
+    override fun onShowPhotoDetails(photosPath: ArrayList<String>) {
+        val intent = PhotoViewActivity.makeIntent(this, photosPath)
+        startActivity(intent)
+    }
+
+    override fun finish() {
         requestCode = -1
         result = null
         cancel = null
 
-        super.onDestroy()
+        super.finish()
     }
 }

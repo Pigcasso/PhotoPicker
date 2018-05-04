@@ -8,16 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Sample"/>
+    <style name="Sample" />
 
-    <style name="Sample.ItemView">
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_width">match_parent</item>
+    <style name="Sample.Title">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="Sample.Switch" parent="Sample.ItemView">
-
+    <style name="Sample.CheckBox">
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>
