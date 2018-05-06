@@ -2,7 +2,7 @@
 
 PhotoPicker 是一个轻量级的图片选择器。实现的功能，一张图胜过千言万语：
 
-![功能介绍](https://ws2.sinaimg.cn/large/006tKfTcgy1fqz5lrqlljj31ig11wjtx.jpg)
+![功能介绍](./images/feature.jpeg)
 
 ## 简述
 
@@ -132,6 +132,8 @@ class App : Application() {
                 .arrowDropColor(Color.CYAN)
                 .checkboxColor(ContextCompat.getColor(this@App, R.color.colorAccent))
                 .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
+        		.orderedCheckedBackground(R.drawable.ic_badge_checked_24dp)
+                .orderedUncheckedBackground(R.drawable.ic_badge_unchecked_24dp)
     }
 }
 ```
@@ -140,7 +142,49 @@ class App : Application() {
 
 |                                   |                                   |                                   |
 | --------------------------------- | --------------------------------- | --------------------------------- |
-| ![](../assets/theme-config-1.jpg) | ![](../assets/theme-config-2.jpg) | ![](../assets/theme-config-3.jpg) |
+| ![](./images/theme-config-1.jpg) | ![](./images/theme-config-2.jpg) | ![](./images/theme-config-3.jpg) |
+
+替换有序角标的背景需要定义 drawable 资源文件，默认的有序角标 drawable 资源文件如下：
+
+```xml
+<!--选中: ic_badge_checked_24dp.xml-->
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+
+    <size
+        android:width="@dimen/badge_size_width"
+        android:height="@dimen/badge_size_height"/>
+
+    <corners android:radius="@dimen/badge_corners_radius"/>
+
+    <solid android:color="?colorAccent"/>
+
+    <stroke
+        android:width="@dimen/badge_stroke_width"
+        android:color="@android:color/white"/>
+
+</shape>
+
+<!--未选中: ic_badge_unchecked_24dp.xml-->
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+
+    <size
+        android:width="@dimen/badge_size_width"
+        android:height="@dimen/badge_size_height"/>
+
+    <corners android:radius="@dimen/badge_corners_radius"/>
+
+    <stroke
+        android:width="@dimen/badge_stroke_width"
+        android:color="@android:color/white"/>
+
+</shape>
+```
+
+
 
 [Matisse]: https://github.com/zhihu/Matisse
 [PickPhotoSample]: https://github.com/Werb/PickPhotoSample
