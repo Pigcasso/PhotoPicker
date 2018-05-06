@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.github.chrisbanes.photoview.PhotoView
 
 /**
  * @author Zhu Liang
@@ -141,7 +140,7 @@ class PhotoViewActivity : AppCompatActivity() {
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
-            val itemView = PhotoView(context)
+            val itemView = ImageView(context)
             val value = mValues[position]
             container.addView(itemView)
             PhotoPicker.photoLoader.loadPhoto(itemView, value, mViewWidth, mViewHeight)
