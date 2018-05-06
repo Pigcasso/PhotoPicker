@@ -1,6 +1,10 @@
 # PhotoPicker
 
-PhotoPicker 是一个轻量级的图片选择器。实现的功能，一张图胜过千言万语：
+PhotoPicker 是一个轻量级的图片选择器。
+
+[![](https://jitpack.io/v/Pigcasso/PhotoPicker.svg)](https://jitpack.io/#Pigcasso/PhotoPicker)
+
+实现的功能，一张图胜过千言万语：
 
 ![功能介绍](./images/feature.jpeg)
 
