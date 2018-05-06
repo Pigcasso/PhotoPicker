@@ -2,7 +2,9 @@ package io.pigcasso.photopicker
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
@@ -16,7 +18,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.ref.WeakReference
-
 
 /**
  * @author Zhu Liang
@@ -58,6 +59,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     companion object {
         private const val PERMISSIONS = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val RC_READ_EXTERNAL_STORAGE = 1
+        private const val RC_PHOTO_VIEW = 2
         private const val EXTRA_CHECKED_PHOTOS = "extra.CHECKED_PHOTOS"
 
         fun newInstance(allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean, selectableAll: Boolean): PhotoPickerFragment {
@@ -197,6 +199,19 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         loadAlbums()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            RC_PHOTO_VIEW -> {
+                if (Activity.RESULT_OK == resultCode) {
+                    mCheckedPhotos = data!!.getStringArrayListExtra(PhotoViewActivity.EXTRA_CHECKED_PHOTOS)
+                    onPhotosSelect()
+                    updateToggleText()
+                    mPhotosAdapter!!.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
     private fun setLoadingIndicator(active: Boolean) {
         if (view == null) return
         val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
@@ -251,14 +266,14 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         PhotosAsyncTask(this, album).execute()
     }
 
-    fun showNoAlbums() {
+    private fun showNoAlbums() {
         val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
         val bottomBar = findViewById<View>(R.id.ll_photo_picker_bottom_bar)!!
         indicatorRv.visibility = View.VISIBLE
         bottomBar.visibility = View.INVISIBLE
     }
 
-    fun showAlbums(albums: List<Album>) {
+    private fun showAlbums(albums: List<Album>) {
         mAlbumsAdapter.replaceData(albums)
 
         if (mSelectedAlbum == null) {
@@ -269,11 +284,11 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    fun showNoPhotos() {
+    private fun showNoPhotos() {
 
     }
 
-    fun showPhotos(photos: List<Photo>) {
+    private fun showPhotos(photos: List<Photo>) {
         val gridView = findViewById<GridView>(R.id.gridView)
         when (mChoiceMode) {
             CHOICE_MODE_SINGLE -> {
@@ -329,19 +344,19 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         return mCheckedPhotos.contains(photo.absolutePath)
     }
 
-    fun uncheckedPhoto(photo: Photo) {
+    private fun uncheckedPhoto(photo: Photo) {
         if (mCheckedPhotos.contains(photo.absolutePath)) {
             mCheckedPhotos.remove(photo.absolutePath)
         }
     }
 
-    fun checkPhoto(photo: Photo) {
+    private fun checkPhoto(photo: Photo) {
         if (mCheckedPhotos.contains(photo.absolutePath).not()) {
             mCheckedPhotos.add(photo.absolutePath)
         }
     }
 
-    fun indexOfPhoto(photo: Photo): Int {
+    private fun indexOfPhoto(photo: Photo): Int {
         return mCheckedPhotos.indexOf(photo.absolutePath)
     }
 
@@ -352,7 +367,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mOnPhotoPickerListener?.onSelectedResult(getAllCheckedPhotos())
     }
 
-    fun getAllCheckedPhotos(): ArrayList<String> {
+    private fun getAllCheckedPhotos(): ArrayList<String> {
         val photos = arrayListOf<String>()
         mCheckedPhotos.forEach { it ->
             photos.add(it)
@@ -408,13 +423,14 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun showPhotoPreview() {
         if (context == null) return
-        mOnPhotoPickerListener?.onShowPhotoDetails(getAllCheckedPhotos())
+        val intent = PhotoViewActivity.makeIntent(context!!, getAllCheckedPhotos())
+        startActivityForResult(intent, RC_PHOTO_VIEW)
     }
 
     /**
      * 更新"全选"或"全不选"按钮上的文字
      */
-    fun updateToggleText() {
+    private fun updateToggleText() {
         if (view == null || mPhotosAdapter == null) {
             return
         }
@@ -622,10 +638,5 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
          * 点击完成时回调
          */
         fun onSelectedResult(photoPaths: ArrayList<String>)
-
-        /**
-         * 查看选中图片细节
-         */
-        fun onShowPhotoDetails(photosPath: ArrayList<String>)
     }
 }

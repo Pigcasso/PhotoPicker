@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="group_menu_photo_picker_select_done" type="id"/>
-    <item name="menu_photo_picker_select_done" type="id"/>
+    <item name="group_menu_photo_picker_select_done" type="id" />
+    <item name="menu_photo_picker_select_done" type="id" />
+
+    <item name="vp_photo_view_gallery" type="id" />
+    <item name="iv_photo_view_checkbox" type="id" />
+    <item name="tv_photo_view_checkbox" type="id" />
 </resources>

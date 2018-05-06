@@ -84,14 +84,6 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         finish()
     }
 
-    /**
-     * 查看选中图片细节
-     */
-    override fun onShowPhotoDetails(photosPath: ArrayList<String>) {
-        val intent = PhotoViewActivity.makeIntent(this, photosPath)
-        startActivity(intent)
-    }
-
     override fun finish() {
         requestCode = -1
         result = null

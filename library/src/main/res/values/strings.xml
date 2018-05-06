@@ -13,4 +13,6 @@
     <string name="module_photo_picker_max_limit">最多选择%1$d张图片</string>
     <string name="module_photo_picker_all_photos">所有图片</string>
     <string name="module_photo_picker_read_external_storage_denied">无法获取图片</string>
+    <string name="module_photo_view_checked">选择</string>
+    <string name="module_photo_view_checkbox_desc">选择</string>
 </resources>
