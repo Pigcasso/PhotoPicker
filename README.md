@@ -22,7 +22,7 @@ Demo 截屏
 
 |                                                              |                                                              |                                                              |                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-features.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-1.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-2.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-3.png) |
+| ![](images/screenshot-features.png) | ![](images/screenshot-1.png) | ![](images/screenshot-2.png) | ![](images/screenshot-3.png) |
 
 ## 下载
 
