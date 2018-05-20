@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn io.pigcasso.photopicker.**
+-dontwarn zhuliang.photopicker.**

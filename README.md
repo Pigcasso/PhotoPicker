@@ -237,7 +237,7 @@ class App : Application() {
 ## 混淆
 
 ```
--dontwarn io.pigcasso.photopicker.**
+-dontwarn zhuliang.photopicker.**
 ```
 
 ## 版权信息

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.pigcasso.photopicker.SquareFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<io.zhuliang.photopicker.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/module_photo_picker_photo_thumb"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/iv_photo_picker_photo_checkbox"
@@ -18,8 +17,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
         android:contentDescription="@string/module_photo_picker_photo_checkbox"
-        tools:src="@drawable/ic_check_box_outline_blank_black_24dp"/>
+        tools:src="@drawable/ic_check_box_outline_blank_black_24dp" />
 
-</io.pigcasso.photopicker.SquareFrameLayout>
+</io.zhuliang.photopicker.SquareFrameLayout>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <io.pigcasso.photopicker.HackyViewPager
+    <io.zhuliang.photopicker.HackyViewPager
         android:id="@+id/vp_photo_view_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -17,6 +17,8 @@
         android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
         android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingStart="0dp">
 
         <ImageView
