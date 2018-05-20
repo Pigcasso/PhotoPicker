@@ -33,7 +33,7 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 27
-    minSdkVersion = 17
+    minSdkVersion = 15
     targetSdkVersion = 27
 
     junitVersion = '4.12'
