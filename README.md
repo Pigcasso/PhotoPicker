@@ -1,27 +1,32 @@
 # PhotoPicker
 
-PhotoPicker 是一个轻量级的图片选择器。
+## 项目介绍
 
-[![](https://jitpack.io/v/Pigcasso/PhotoPicker.svg)](https://jitpack.io/#Pigcasso/PhotoPicker)
-
-实现的功能，一张图胜过千言万语：
-
-![功能介绍](./images/feature.jpeg)
-
-## 简述
+PhotoPicker 是一个用 Kotlin 编写的轻量的 Android 图片选择器。
 
 虽然 GitHub 上已经有很多图片选择器，比如 [Album][Album]、[Matisse][Matisse]、[PickPhotoSample][PickPhotoSample]、[RxGalleryFinal][RxGalleryFinal] 等这些优秀的开源库。经调研这些库在多选模式下只支持指定最大可选数量，并不支持无上限的多选模式。通常这种模式的使用场景确实比较少，然而我司的一款产品就有用户反馈过这个需求。并且我司正在开发的一款产品中也需要这个功能，为了复用这个功能模块，我的 PhotoPicker 就应运而生了。
 
 目前 PhotoPicker 还只是 **alpha** 版本，如果你有好的建议欢迎提 issue 和 pull request。
 
-## 功能
+[![](https://jitpack.io/v/Pigcasso/PhotoPicker.svg)](https://jitpack.io/#Pigcasso/PhotoPicker) [![GitHub license](https://img.shields.io/github/license/Pigcasso/PhotoPicker.svg)](https://github.com/Pigcasso/PhotoPicker/blob/master/LICENSE)
 
-- 支持单选、设置上限多选、无上限多选三种模式
-- 轻量，没有过多的依赖
-- 支持流式 API
-- 支持不同的图片加载器
+##  功能![功能介绍](./images/xmind-features.jpeg)
 
-## 依赖
+## 截屏
+
+下载地址
+
+![](./images/photo-picker-qrcode.png)
+
+Demo 截屏
+
+|                                                              |                                                              |                                                              |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-features.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-1.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-2.png) | ![](/Volumes/Storage/GitHub/Pigcasso/PhotoPicker/images/screenshot-3.png) |
+
+## 下载
+
+Gradle
 
 第一步：
 
@@ -44,6 +49,8 @@ dependencies {
 }
 ```
 
+
+
 ## 使用
 
 PhotoPicker 的使用方法包括：单选模式、多选模式（设置上限）、多选模式（无上限）。
@@ -51,19 +58,31 @@ PhotoPicker 的使用方法包括：单选模式、多选模式（设置上限�
 ### 单选模式
 
 ```kotlin
+// Kotlin
 PhotoPicker
-	.image(this)
-	.singleChoice() // 单选模式
-	.allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-	.preview(previewCheck.isChecked) // 是否开启预览功能
-	.onResult(result) // 选择完成后的回调
-    .onCancel(cancel) // 取消选择后的回调
-	.start()
+        .image(this)
+        .singleChoice() // 单选模式
+        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+        .preview(previewCheck.isChecked) // 是否开启预览功能
+        .onResult(result) // 选择完成后的回调
+        .onCancel(cancel) // 取消选择后的回调
+        .start()
+// Java
+PhotoPicker
+        .Companion
+        .image(this)
+        .singleChoice() // 单选模式
+        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+        .preview(previewCheck.isChecked) // 是否开启预览功能
+        .onResult(result) // 选择完成后的回调
+        .onCancel(cancel) // 取消选择后的回调
+        .start()
 ```
 
 ### 多选模式（设置上限）
 
 ```kotlin
+// Kotlin
 PhotoPicker
         .image(this)
         .multipleChoice() // 多选模式
@@ -75,11 +94,25 @@ PhotoPicker
         .onResult(result) // 选择完成后的回调
         .onCancel(cancel) // 取消选择后的回调
         .start()
+// Java
+PhotoPicker
+        .Companion
+        .image(this)
+        .multipleChoice() // 多选模式
+        .upperLimit() // 设置上限
+        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+        .preview(previewCheck.isChecked) // 是否开启预览功能
+        .limitCount(limitCount) // 设置可选的上限数
+        .countable(countableCheck.isChecked)
+        .onResult(result) // 选择完成后的回调
+        .onCancel(cancel) // 取消选择后的回调
+        .start();
 ```
 
 ### 多选模式（无上限）
 
 ```kotlin
+// Kotlin
 PhotoPicker
         .image(this)
         .multipleChoice() // 多选模式
@@ -91,6 +124,19 @@ PhotoPicker
         .onResult(result) // 选择完成后的回调
         .onCancel(cancel) // 取消选择后的回调
         .start()
+// Java
+PhotoPicker
+        .Companion
+        .image(this)
+        .multipleChoice() // 多选模式
+        .noUpperLimit() // 无上限
+        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+        .preview(previewCheck.isChecked) // 是否开启预览功能
+        .countable(countableCheck.isChecked) // 是否开启有序选择图片功能
+        .selectableAll(selectableAllCheck.isChecked) // 是否开启选择全部功能
+        .onResult(result) // 选择完成后的回调
+        .onCancel(cancel) // 取消选择后的回调
+        .start();
 ```
 
 ## 配置
@@ -144,7 +190,7 @@ class App : Application() {
 
 主题色对应的位置
 
-|                                   |                                   |                                   |
+|  |  |  |
 | --------------------------------- | --------------------------------- | --------------------------------- |
 | ![](./images/theme-config-1.jpg) | ![](./images/theme-config-2.jpg) | ![](./images/theme-config-3.jpg) |
 
@@ -188,7 +234,27 @@ class App : Application() {
 </shape>
 ```
 
+## 混淆
 
+```
+-dontwarn io.pigcasso.photopicker.**
+```
+
+## 版权信息
+
+    Copyright 2018 Picgasso
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 [Matisse]: https://github.com/zhihu/Matisse
 [PickPhotoSample]: https://github.com/Werb/PickPhotoSample
