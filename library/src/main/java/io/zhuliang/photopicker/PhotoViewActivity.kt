@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -41,6 +42,8 @@ class PhotoViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_photo_view)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         checkboxOutlineDrawable = ThemeConfig.tint(this, R.drawable.ic_check_box_outline_blank_black_24dp, PhotoPicker.themeConfig.checkboxOutlineColor)
         checkboxDrawable = ThemeConfig.tint(this, R.drawable.ic_check_box_black_24dp, PhotoPicker.themeConfig.checkboxColor)
@@ -99,6 +102,14 @@ class PhotoViewActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState?.putInt(EXTRA_CURRENT_ITEM, mCurrentItem)
         outState?.putSerializable(EXTRA_CHECKED_PHOTOS, mCheckedPhotos)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null && item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {

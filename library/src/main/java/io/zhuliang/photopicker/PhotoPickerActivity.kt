@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import io.zhuliang.photopicker.api.Action
 
 class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
@@ -42,6 +43,8 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
 
         setContentView(R.layout.activity_photo_picker)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         checkNotNull(intent)
 
         var fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
@@ -55,6 +58,14 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
                     intent!!.getBooleanExtra(EXTRA_SELECTABLE_ALL, false))
             supportFragmentManager.beginTransaction().add(R.id.contentFrame, fragment).commit()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null && item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
