@@ -53,30 +53,38 @@ dependencies {
 
 ## 使用
 
-PhotoPicker 的使用方法包括：单选模式、多选模式（设置上限）、多选模式（无上限）。
+PhotoPicker 的使用方法包括：注册 Activity、单选模式、多选模式（设置上限）、多选模式（无上限）。
+
+### 注册 Activity
+
+```xml
+<activity android:name="io.pigcasso.photopicker.PhotoPickerActivity"/>
+<!--如果开启预览功能，需要注册 PhotoViewActivity -->
+<activity android:name="io.pigcasso.photopicker.PhotoViewActivity"/>
+```
 
 ### 单选模式
 
 ```kotlin
 // Kotlin
 PhotoPicker
-        .image(this)
-        .singleChoice() // 单选模式
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start()
+    .image(this)
+    .singleChoice() // 单选模式
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start()
 // Java
 PhotoPicker
-        .Companion
-        .image(this)
-        .singleChoice() // 单选模式
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start()
+    .Companion
+    .image(this)
+    .singleChoice() // 单选模式
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start()
 ```
 
 ### 多选模式（设置上限）
@@ -84,29 +92,29 @@ PhotoPicker
 ```kotlin
 // Kotlin
 PhotoPicker
-        .image(this)
-        .multipleChoice() // 多选模式
-        .upperLimit() // 设置上限
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .limitCount(limitCount) // 设置可选的上限数
-        .countable(countableCheck.isChecked)
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start()
+    .image(this)
+    .multipleChoice() // 多选模式
+    .upperLimit() // 设置上限
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .limitCount(limitCount) // 设置可选的上限数
+    .countable(countableCheck.isChecked)
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start()
 // Java
 PhotoPicker
-        .Companion
-        .image(this)
-        .multipleChoice() // 多选模式
-        .upperLimit() // 设置上限
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .limitCount(limitCount) // 设置可选的上限数
-        .countable(countableCheck.isChecked)
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start();
+    .Companion
+    .image(this)
+    .multipleChoice() // 多选模式
+    .upperLimit() // 设置上限
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .limitCount(limitCount) // 设置可选的上限数
+    .countable(countableCheck.isChecked)
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start();
 ```
 
 ### 多选模式（无上限）
@@ -114,29 +122,29 @@ PhotoPicker
 ```kotlin
 // Kotlin
 PhotoPicker
-        .image(this)
-        .multipleChoice() // 多选模式
-        .noUpperLimit() // 无上限
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .countable(countableCheck.isChecked) // 是否开启有序选择图片功能
-        .selectableAll(selectableAllCheck.isChecked) // 是否开启选择全部功能
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start()
+    .image(this)
+    .multipleChoice() // 多选模式
+    .noUpperLimit() // 无上限
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .countable(countableCheck.isChecked) // 是否开启有序选择图片功能
+    .selectableAll(selectableAllCheck.isChecked) // 是否开启选择全部功能
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start()
 // Java
 PhotoPicker
-        .Companion
-        .image(this)
-        .multipleChoice() // 多选模式
-        .noUpperLimit() // 无上限
-        .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
-        .preview(previewCheck.isChecked) // 是否开启预览功能
-        .countable(countableCheck.isChecked) // 是否开启有序选择图片功能
-        .selectableAll(selectableAllCheck.isChecked) // 是否开启选择全部功能
-        .onResult(result) // 选择完成后的回调
-        .onCancel(cancel) // 取消选择后的回调
-        .start();
+    .Companion
+    .image(this)
+    .multipleChoice() // 多选模式
+    .noUpperLimit() // 无上限
+    .allPhotosAlbum(allPhotosAlbumCheck.isChecked) // 是否显示所有图片相册
+    .preview(previewCheck.isChecked) // 是否开启预览功能
+    .countable(countableCheck.isChecked) // 是否开启有序选择图片功能
+    .selectableAll(selectableAllCheck.isChecked) // 是否开启选择全部功能
+    .onResult(result) // 选择完成后的回调
+    .onCancel(cancel) // 取消选择后的回调
+    .start();
 ```
 
 ## 配置
@@ -149,6 +157,8 @@ PhotoPicker 内置了一个简单的图片加载器 DefaultPhotoLoader。你也�
 
 请在项目中合适的位置（建议在 `Application` ）修改图片加载库，以 `Glide` 为例：
 
+`Kotlin`代码：
+
 ```kotlin
 // 实现 PhotoLoader 接口
 class GlidePhotoLoader : PhotoLoader {
@@ -156,7 +166,6 @@ class GlidePhotoLoader : PhotoLoader {
         Glide.with(imageView).load(imagePath).into(imageView)
     }
 }
-
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -166,26 +175,50 @@ class App : Application() {
 }
 ```
 
+`Java`代码：
+
+```java
+// 实现 PhotoLoader 接口
+public class GlidePhotoLoader implements PhotoLoader {
+    @Override
+    public void loadPhoto(@NotNull ImageView imageView, @NotNull String imagePath, int viewWidth, int viewHeight) {
+        Glide.with(imageView).load(imagePath).into(imageView);
+    }
+}
+public class App extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+		// 修改图片加载库
+        PhotoPicker.Companion.setPhotoLoader(new GlidePhotoLoader());
+    }
+}
+```
+
 ### 修改主题色
 
 请在项目中合适的位置（建议在`Application`中）修改主题色
 
 ```kotlin
-class App : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        
-        PhotoPicker.themeConfig = ThemeConfig()
-                .radioCheckedColor(Color.RED)
-                .bottomBarBackgroundColor(ContextCompat.getColor(this@App, R.color.colorPrimary))
-                .bottomBarTextColor(Color.MAGENTA)
-                .arrowDropColor(Color.CYAN)
-                .checkboxColor(ContextCompat.getColor(this@App, R.color.colorAccent))
-                .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
-        		.orderedCheckedBackground(R.drawable.ic_badge_checked_24dp)
-                .orderedUncheckedBackground(R.drawable.ic_badge_unchecked_24dp)
-    }
-}
+// Kotlin
+PhotoPicker.themeConfig = ThemeConfig()
+    .radioCheckedColor(Color.RED)
+    .bottomBarBackgroundColor(ContextCompat.getColor(this@App, R.color.colorPrimary))
+    .bottomBarTextColor(Color.MAGENTA)
+    .arrowDropColor(Color.CYAN)
+    .checkboxColor(ContextCompat.getColor(this@App, R.color.colorAccent))
+    .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
+    .orderedCheckedBackground(R.drawable.ic_badge_checked_24dp)
+    .orderedUncheckedBackground(R.drawable.ic_badge_unchecked_24dp)
+// Java
+ThemeConfig themeConfig = new ThemeConfig()
+    .radioCheckedColor(Color.RED)
+    .bottomBarBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+    .bottomBarTextColor(Color.MAGENTA)
+    .arrowDropColor(Color.CYAN)
+    .checkboxColor(ContextCompat.getColor(this, R.color.colorAccent))
+    .checkboxOutlineColor(ContextCompat.getColor(this, R.color.colorAccent));
+PhotoPicker.Companion.setThemeConfig(themeConfig);
 ```
 
 主题色对应的位置
