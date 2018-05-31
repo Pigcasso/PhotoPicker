@@ -58,9 +58,9 @@ PhotoPicker 的使用方法包括：注册 Activity、单选模式、多选模�
 ### 注册 Activity
 
 ```xml
-<activity android:name="io.pigcasso.photopicker.PhotoPickerActivity"/>
+<activity android:name="io.zhuliang.photopicker.PhotoPickerActivity"/>
 <!--如果开启预览功能，需要注册 PhotoViewActivity -->
-<activity android:name="io.pigcasso.photopicker.PhotoViewActivity"/>
+<activity android:name="io.zhuliang.photopicker.PhotoViewActivity"/>
 ```
 
 ### 单选模式
