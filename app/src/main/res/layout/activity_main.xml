@@ -32,13 +32,13 @@
                 android:id="@id/radio_button_main_choice_mode_multiple_upper_limit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/multiple_choice_upper_limit" />
+                android:text="@string/module_main_multiple_choice_upper_limit" />
 
             <RadioButton
                 android:id="@id/radio_button_main_choice_mode_multiple_no_upper_limit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/multiple_choice_no_limit_upper" />
+                android:text="@string/module_main_multiple_choice_no_limit_upper" />
         </RadioGroup>
     </HorizontalScrollView>
 
@@ -56,7 +56,7 @@
             android:id="@id/et_main_limit_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/multiple_choice_limit_count"
+            android:hint="@string/module_main_multiple_choice_limit_count"
             android:inputType="number"
             android:minWidth="100dp" />
     </LinearLayout>
@@ -73,7 +73,7 @@
         <CheckBox
             android:id="@id/checkbox_main_all_photos_album"
             style="@style/Sample.CheckBox"
-            android:text="@string/single_choice_all_photos_album" />
+            android:text="@string/module_main_all_photos_album" />
 
         <CheckBox
             android:id="@id/checkbox_main_preview"
@@ -88,7 +88,7 @@
         <CheckBox
             android:id="@id/checkbox_main_selectable_all"
             style="@style/Sample.CheckBox"
-            android:text="@string/multiple_choice_selectable_all" />
+            android:text="@string/module_main_multiple_choice_selectable_all" />
 
     </GridLayout>
 

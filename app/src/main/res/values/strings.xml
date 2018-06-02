@@ -1,17 +1,16 @@
 <resources>
     <string name="app_name">PhotoPicker</string>
-    <string name="module_main_single_choice_mode">单选</string>
-    <string name="multiple_choice_upper_limit">多选（设置上限）</string>
-    <string name="multiple_choice_no_limit_upper">多选（无上限）</string>
-    <string name="single_choice_all_photos_album">显示所有照片相册</string>
-    <string name="module_main_preview">支持预览</string>
-    <string name="module_main_countable">记录选中次序</string>
-    <string name="module_main_limit_count_title">最大可选数量</string>
-    <string name="multiple_choice_limit_count">默认 9 张</string>
-    <string name="choice_done">完成</string>
-    <string name="multiple_choice_selectable_all">支持全选</string>
-
-    <string name="module_main_choice_mode">选择模式</string>
-    <string name="module_main_options_title">选项</string>
-    <string name="module_main_results">返回结果</string>
+    <string name="module_main_single_choice_mode">Single choice mode</string>
+    <string name="module_main_multiple_choice_upper_limit">Multiple choice (Upper limit)</string>
+    <string name="module_main_multiple_choice_no_limit_upper">Multiple choice（No upper limit）</string>
+    <string name="module_main_all_photos_album">All photos album</string>
+    <string name="module_main_preview">Preview</string>
+    <string name="module_main_countable">Countable</string>
+    <string name="module_main_limit_count_title">Limit count</string>
+    <string name="module_main_multiple_choice_limit_count">Default 9 image items</string>
+    <string name="module_main_choice_done">Done</string>
+    <string name="module_main_multiple_choice_selectable_all">Selectable all</string>
+    <string name="module_main_choice_mode">Choice mode</string>
+    <string name="module_main_options_title">Options</string>
+    <string name="module_main_results">Results</string>
 </resources>

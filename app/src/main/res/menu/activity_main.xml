@@ -5,6 +5,6 @@
     <item
         android:id="@id/menu_choice_done"
         android:icon="@drawable/ic_done_white_24dp"
-        android:title="@string/choice_done"
+        android:title="@string/module_main_choice_done"
         app:showAsAction="always" />
 </menu>
