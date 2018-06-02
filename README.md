@@ -45,7 +45,7 @@ allprojects {
 
 ```groovy
 dependencies {
-	implementation 'com.github.Pigcasso:PhotoPicker:0.1.2-alpha'
+	implementation 'com.github.Pigcasso:PhotoPicker:0.1.4-alpha'
 }
 ```
 
