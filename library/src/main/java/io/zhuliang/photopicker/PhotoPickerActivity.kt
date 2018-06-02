@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import io.zhuliang.photopicker.api.Action
 
@@ -60,12 +61,29 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu ?: return super.onCreateOptionsMenu(menu)
+
+        val menuItem = menu.add(R.id.group_menu_photo_picker_select_done, R.id.menu_photo_picker_select_done,
+                Menu.NONE, R.string.module_photo_picker_select_done)
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item != null && item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+        item ?: return super.onOptionsItemSelected(item)
+
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            R.id.menu_photo_picker_select_done -> {
+                selectDone()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -81,18 +99,22 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
     }
 
     /**
-     * 点击完成时回调
+     * 用户选好图片后，点击了完成按钮
      */
-    override fun onSelectedResult(photoPaths: ArrayList<String>) {
-        if (result != null) {
-            result!!.onAction(requestCode, photoPaths)
-            setResult(Activity.RESULT_OK)
-        } else {
-            val data = Intent()
-            data.putStringArrayListExtra(EXTRA_RESULT_SELECTION, photoPaths)
-            setResult(Activity.RESULT_OK, data)
+    private fun selectDone() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
+        if (fragment != null && fragment.isAdded && fragment is PhotoPickerFragment) {
+            val photoPaths = fragment.getAllCheckedPhotos()
+            if (result != null) {
+                result!!.onAction(requestCode, photoPaths)
+                setResult(Activity.RESULT_OK)
+            } else {
+                val data = Intent()
+                data.putStringArrayListExtra(EXTRA_RESULT_SELECTION, photoPaths)
+                setResult(Activity.RESULT_OK, data)
+            }
+            finish()
         }
-        finish()
     }
 
     override fun finish() {

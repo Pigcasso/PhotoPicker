@@ -12,7 +12,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.ListPopupWindow
 import android.util.DisplayMetrics
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
@@ -161,22 +163,6 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.module_photo_picker_read_external_storage_rationale), RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        val menuItem = menu.add(R.id.group_menu_photo_picker_select_done, R.id.menu_photo_picker_select_done,
-                Menu.NONE, R.string.module_photo_picker_select_done)
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.menu_photo_picker_select_done -> {
-                selectDone()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -360,14 +346,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         return mCheckedPhotos.indexOf(photo.absolutePath)
     }
 
-    /**
-     * 用户选好图片后，点击了完成按钮
-     */
-    private fun selectDone() {
-        mOnPhotoPickerListener?.onSelectedResult(getAllCheckedPhotos())
-    }
-
-    private fun getAllCheckedPhotos(): ArrayList<String> {
+    fun getAllCheckedPhotos(): ArrayList<String> {
         val photos = arrayListOf<String>()
         mCheckedPhotos.forEach { it ->
             photos.add(it)
@@ -633,10 +612,5 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
          * 更新选中的图片时回调
          */
         fun onPhotosSelect(photoPaths: ArrayList<String>)
-
-        /**
-         * 点击完成时回调
-         */
-        fun onSelectedResult(photoPaths: ArrayList<String>)
     }
 }
