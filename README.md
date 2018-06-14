@@ -241,7 +241,7 @@ PhotoPicker.Companion.setThemeConfig(themeConfig);
 
     <corners android:radius="@dimen/badge_corners_radius"/>
 
-    <solid android:color="?colorAccent"/>
+    <solid android:color="@android:color/holo_red_light"/>
 
     <stroke
         android:width="@dimen/badge_stroke_width"

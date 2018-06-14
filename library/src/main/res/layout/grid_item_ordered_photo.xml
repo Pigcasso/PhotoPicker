@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.zhuliang.photopicker.SquareFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<io.zhuliang.photopicker.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/module_photo_picker_photo_thumb"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/iv_photo_picker_photo_checked_order"
@@ -19,14 +18,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
         android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/ic_badge_checked_24dp"
         android:gravity="center"
         android:paddingEnd="3dp"
         android:paddingStart="3dp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        tools:text="0000"/>
+        tools:background="@drawable/ic_badge_checked_24dp"
+        tools:text="0000" />
 
 </io.zhuliang.photopicker.SquareFrameLayout>
