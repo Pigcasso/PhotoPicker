@@ -20,5 +20,7 @@ class App : Application() {
                 .arrowDropColor(Color.CYAN)
                 .checkboxColor(ContextCompat.getColor(this@App, R.color.colorAccent))
                 .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
+                .orderedCheckedBackground(R.drawable.ic_app_badge_checked_24dp)
+                .orderedUncheckedBackground(R.drawable.ic_app_badge_unchecked_24dp)
     }
 }
