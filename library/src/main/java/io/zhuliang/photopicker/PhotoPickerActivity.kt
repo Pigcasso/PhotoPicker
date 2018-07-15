@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import io.zhuliang.photopicker.api.Action
 
 class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
@@ -105,6 +106,10 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
         if (fragment != null && fragment.isAdded && fragment is PhotoPickerFragment) {
             val photoPaths = fragment.getAllCheckedPhotos()
+            if (photoPaths.isEmpty()) {
+                Toast.makeText(this, R.string.module_photo_picker_select_no_images, Toast.LENGTH_SHORT).show()
+                return
+            }
             if (result != null) {
                 result!!.onAction(requestCode, photoPaths)
                 setResult(Activity.RESULT_OK)

@@ -8,11 +8,12 @@
     <string name="module_photo_picker_unselected_all">Unselect all</string>
     <string name="module_photo_picker_select_done">Done</string>
     <string name="module_photo_picker_select_photo_count">Selected %d</string>
-    <string name="module_photo_view_preview">Preview(%d/%d)</string>
     <string name="module_photo_picker_read_external_storage_rationale">Request permission: Read your album</string>
     <string name="module_photo_picker_max_limit">You can only select %1$d image items</string>
     <string name="module_photo_picker_all_photos">All photos</string>
     <string name="module_photo_picker_read_external_storage_denied">No permission to read your album</string>
+    <string name="module_photo_picker_select_no_images">Please select a image item.</string>
+    <string name="module_photo_view_preview">Preview(%d/%d)</string>
     <string name="module_photo_view_checked">Select</string>
     <string name="module_photo_view_checkbox_desc">Select</string>
 </resources>
