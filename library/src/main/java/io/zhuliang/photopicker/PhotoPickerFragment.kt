@@ -93,7 +93,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mAlbumsAdapter = AlbumsAdapter(context!!, arrayListOf())
 
         mCheckedPhotos = if (savedInstanceState != null) {
-            savedInstanceState.getStringArrayList(EXTRA_CHECKED_PHOTOS)
+            savedInstanceState.getStringArrayList(EXTRA_CHECKED_PHOTOS)!!
         } else {
             ArrayList(0)
         }
@@ -105,11 +105,11 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val choiceMode = arguments!!.getInt(EXTRA_CHOICE_MODE)
         check(choiceMode == CHOICE_MODE_SINGLE
                 || choiceMode == CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
-                || choiceMode == CHOICE_MODE_MULTIPLE_UPPER_LIMIT, { "Invalid choice mode: $choiceMode" })
+                || choiceMode == CHOICE_MODE_MULTIPLE_UPPER_LIMIT) { "Invalid choice mode: $choiceMode" }
         mChoiceMode = choiceMode
 
         val limitCount = arguments!!.getInt(EXTRA_LIMIT_COUNT)
-        check(limitCount == NO_LIMIT_COUNT || limitCount >= 1, { "Invalid limit count: $limitCount" })
+        check(limitCount == NO_LIMIT_COUNT || limitCount >= 1) { "Invalid limit count: $limitCount" }
         mLimitCount = limitCount
 
         mAllPhotosAlbum = arguments!!.getBoolean(EXTRA_ALL_PHOTOS_ALBUM, true)
@@ -203,7 +203,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
         val loadingIndicator = findViewById<View>(R.id.loadingIndicator)!!
         val statusIndicator = findViewById<View>(R.id.statusIndicator)!!
-        indicatorRv.post({
+        indicatorRv.post {
             if (active) {
                 indicatorRv.visibility = View.VISIBLE
                 loadingIndicator.visibility = View.VISIBLE
@@ -213,7 +213,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 loadingIndicator.visibility = View.INVISIBLE
                 statusIndicator.visibility = View.VISIBLE
             }
-        })
+        }
     }
 
     private fun setStatusIndicator(statusText: String) {
@@ -221,12 +221,12 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val indicatorRv = findViewById<View>(R.id.rv_photo_picker_indicator)!!
         val loadingIndicator = findViewById<View>(R.id.loadingIndicator)!!
         val statusIndicator = findViewById<TextView>(R.id.statusIndicator)!!
-        indicatorRv.post({
+        indicatorRv.post {
             indicatorRv.visibility = View.VISIBLE
             loadingIndicator.visibility = View.INVISIBLE
             statusIndicator.visibility = View.VISIBLE
             statusIndicator.text = statusText
-        })
+        }
     }
 
     private fun initThemeConfig() {
@@ -450,7 +450,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             } else {
                 checkboxIv.setImageDrawable(checkboxOutlineDrawable)
             }
-            thumbIv.setOnClickListener({
+            thumbIv.setOnClickListener {
                 if (fragment.isPhotoChecked(value)) {
                     fragment.uncheckedPhoto(value)
                     checkboxIv.setImageDrawable(checkboxOutlineDrawable)
@@ -476,7 +476,7 @@ class PhotoPickerFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                         fragment.onPhotosSelect()
                     }
                 }
-            })
+            }
         }
     }
 
