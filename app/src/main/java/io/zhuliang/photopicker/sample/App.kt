@@ -22,5 +22,7 @@ class App : Application() {
                 .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
                 .orderedCheckedBackground(R.drawable.ic_app_badge_checked_24dp)
                 .orderedUncheckedBackground(R.drawable.ic_app_badge_unchecked_24dp)
+                .actionBarBackground(ContextCompat.getColor(this@App, R.color.colorPrimary))
+                .statusBarColor(ContextCompat.getColor(this@App, R.color.colorPrimaryDark))
     }
 }

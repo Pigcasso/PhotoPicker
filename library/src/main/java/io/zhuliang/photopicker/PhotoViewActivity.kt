@@ -3,7 +3,9 @@ package io.zhuliang.photopicker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
@@ -44,6 +46,11 @@ class PhotoViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_photo_view)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(PhotoPicker.themeConfig.actionBarBackground))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = PhotoPicker.themeConfig.statusBarColor
+        }
 
         checkboxOutlineDrawable = ThemeConfig.tint(this, R.drawable.ic_check_box_outline_blank_black_24dp, PhotoPicker.themeConfig.checkboxOutlineColor)
         checkboxDrawable = ThemeConfig.tint(this, R.drawable.ic_check_box_black_24dp, PhotoPicker.themeConfig.checkboxColor)

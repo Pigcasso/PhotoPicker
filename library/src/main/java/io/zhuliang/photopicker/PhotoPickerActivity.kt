@@ -3,6 +3,8 @@ package io.zhuliang.photopicker
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -46,6 +48,11 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         setContentView(R.layout.activity_photo_picker)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(PhotoPicker.themeConfig.actionBarBackground))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = PhotoPicker.themeConfig.statusBarColor
+        }
 
         checkNotNull(intent)
 

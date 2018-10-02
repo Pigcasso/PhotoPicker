@@ -18,6 +18,8 @@ class ThemeConfig {
     internal var orderedCheckedBackground: Int = R.drawable.ic_badge_checked_24dp
     internal var radioCheckedColor: Int = Color.YELLOW
     internal var arrowDropColor: Int = Color.GREEN
+    internal var actionBarBackground = Color.RED
+    internal var statusBarColor = Color.MAGENTA
 
     fun bottomBarBackgroundColor(bottomBarBackgroundColor: Int): ThemeConfig {
         this.bottomBarBackgroundColor = bottomBarBackgroundColor
@@ -56,6 +58,16 @@ class ThemeConfig {
 
     fun arrowDropColor(arrowDropColor: Int): ThemeConfig {
         this.arrowDropColor = arrowDropColor
+        return this
+    }
+
+    fun actionBarBackground(actionBarBackground: Int): ThemeConfig {
+        this.actionBarBackground = actionBarBackground
+        return this
+    }
+
+    fun statusBarColor(statusBarColor: Int): ThemeConfig {
+        this.statusBarColor = statusBarColor
         return this
     }
 
