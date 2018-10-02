@@ -210,6 +210,8 @@ PhotoPicker.themeConfig = ThemeConfig()
     .checkboxOutlineColor(ContextCompat.getColor(this@App, R.color.colorAccent))
     .orderedCheckedBackground(R.drawable.ic_badge_checked_24dp)
     .orderedUncheckedBackground(R.drawable.ic_badge_unchecked_24dp)
+    .actionBarBackground(ContextCompat.getColor(this@App, R.color.colorPrimary))
+    .statusBarColor(ContextCompat.getColor(this@App, R.color.colorPrimaryDark))
 // Java
 ThemeConfig themeConfig = new ThemeConfig()
     .radioCheckedColor(Color.RED)
