@@ -1,7 +1,7 @@
 package io.zhuliang.photopicker.api
 
 import android.content.Context
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 import io.zhuliang.photopicker.*
 
 /**

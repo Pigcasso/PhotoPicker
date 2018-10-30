@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.util.LruCache
+import androidx.collection.LruCache
 import android.widget.ImageView
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -25,13 +25,13 @@ object DefaultPhotoLoader : PhotoLoader {
         set(value) {
             field = value
         }
-    private val mLruCache: LruCache<String, Bitmap>
+    private val mLruCache: androidx.collection.LruCache<String, Bitmap>
     private val mUIHandler: Handler
     private val mExecutorService: ExecutorService
 
     init {
         val maxMemory = Runtime.getRuntime().maxMemory() / 4
-        mLruCache = object : LruCache<String, Bitmap>(maxMemory.toInt()) {
+        mLruCache = object : androidx.collection.LruCache<String, Bitmap>(maxMemory.toInt()) {
             override fun sizeOf(key: String, value: Bitmap): Int {
                 return value.rowBytes * value.height
             }

@@ -2,7 +2,7 @@ package io.zhuliang.photopicker.sample
 
 import android.app.Application
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import io.zhuliang.photopicker.PhotoPicker
 import io.zhuliang.photopicker.ThemeConfig
 

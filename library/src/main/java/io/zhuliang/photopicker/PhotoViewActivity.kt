@@ -7,9 +7,9 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -70,12 +70,12 @@ class PhotoViewActivity : AppCompatActivity() {
             savedInstanceState.getSerializable(EXTRA_CHECKED_PHOTOS) as HashMap<String, Boolean>
         }
 
-        val viewPager = findViewById<ViewPager>(R.id.vp_photo_view_gallery)
+        val viewPager = findViewById<androidx.viewpager.widget.ViewPager>(R.id.vp_photo_view_gallery)
         viewPager.adapter = PhotoDetailsAdapter(this, mPhotos)
         viewPager.currentItem = currentItem
         supportActionBar?.title = getString(R.string.module_photo_view_preview, currentItem + 1, mPhotos.size)
 
-        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
@@ -145,7 +145,7 @@ class PhotoViewActivity : AppCompatActivity() {
         return mCheckedPhotos[photo] ?: false
     }
 
-    internal class PhotoDetailsAdapter(private val context: Context, private val mValues: ArrayList<String>) : PagerAdapter() {
+    internal class PhotoDetailsAdapter(private val context: Context, private val mValues: ArrayList<String>) : androidx.viewpager.widget.PagerAdapter() {
 
         private val mViewWidth: Int
         private val mViewHeight: Int
