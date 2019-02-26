@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PhotoPicker</string>
     <string name="module_main_single_choice_mode">Single choice mode</string>
+    <string name="module_main_multiple_choice_mode">Multiple choice mode</string>
     <string name="module_main_multiple_choice_upper_limit">Multiple choice (Upper limit)</string>
     <string name="module_main_multiple_choice_no_limit_upper">Multiple choice（No upper limit）</string>
     <string name="module_main_all_photos_album">All photos album</string>
@@ -13,4 +14,6 @@
     <string name="module_main_choice_mode">Choice mode</string>
     <string name="module_main_options_title">Options</string>
     <string name="module_main_results">Results</string>
+    <string name="module_main_pick_image_within_app">Pick image within app</string>
+    <string name="module_main_pick_from_others">Pick image from others</string>
 </resources>

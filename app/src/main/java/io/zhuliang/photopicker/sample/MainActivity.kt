@@ -1,9 +1,12 @@
 package io.zhuliang.photopicker.sample
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,13 +14,22 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import io.zhuliang.photopicker.*
 import io.zhuliang.photopicker.api.Action
+
 
 /**
  * @author Zhu Liang
  */
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val PICK_PHOTOS_MULTIPLE = 0x123
+        private const val PICK_PHOTOS_SINGLE = 0x124
+    }
 
     private var choiceMode = -1
     private lateinit var result: Action<ArrayList<String>>
@@ -30,7 +42,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var previewCheck: CheckBox
     private lateinit var countableCheck: CheckBox
     private lateinit var selectableAllCheck: CheckBox
-    private lateinit var adapter: CommonAdapter<String>
+    private lateinit var gridView: GridView
+    private lateinit var pathsAdapter: CommonAdapter<String>
+    private lateinit var urisAdapter: CommonAdapter<Uri>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +53,8 @@ class MainActivity : AppCompatActivity() {
 
         result = object : Action<ArrayList<String>> {
             override fun onAction(requestCode: Int, result: ArrayList<String>) {
-                adapter.replaceData(result)
+                gridView.adapter = pathsAdapter
+                pathsAdapter.replaceData(result)
             }
         }
 
@@ -56,16 +71,16 @@ class MainActivity : AppCompatActivity() {
         previewCheck = findViewById(R.id.checkbox_main_preview)
         countableCheck = findViewById(R.id.checkbox_main_countable)
         selectableAllCheck = findViewById(R.id.checkbox_main_selectable_all)
-        val resultsGv = findViewById<GridView>(R.id.gv_main_results)
+        gridView = findViewById(R.id.gv_main_results)
 
-        adapter = ResultsAdapter(this)
-        resultsGv.adapter = adapter
+        pathsAdapter = PathsAdapter(this)
+        urisAdapter = UrisAdapter(this)
 
         val choiceMode = savedInstanceState?.getInt(EXTRA_CHOICE_MODE, choiceMode)
                 ?: CHOICE_MODE_SINGLE
         setChoiceMode(choiceMode)
 
-        choiceModeRadioGroup.setOnCheckedChangeListener({ _, checkedId ->
+        choiceModeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val mode = when (checkedId) {
                 R.id.radio_button_main_choice_mode_single -> {
                     CHOICE_MODE_SINGLE
@@ -81,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             setChoiceMode(mode)
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -174,7 +189,58 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private inner class ResultsAdapter(activity: Activity) : CommonAdapter<String>(R.layout.grid_item_result, ArrayList()) {
+    @Suppress("UNUSED_PARAMETER")
+    fun onPickSingleImage(view: View) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_PHOTOS_SINGLE)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun onPickMultiImages(view: View) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        }
+        startActivityForResult(intent, PICK_PHOTOS_MULTIPLE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (PICK_PHOTOS_MULTIPLE == requestCode) {
+            if (Activity.RESULT_OK == resultCode) {
+                if (data != null) {
+                    val uris = mutableListOf<Uri>()
+                    val clipData = data.clipData
+                    if (clipData != null) {
+                        val count = clipData.itemCount
+                        for (i in 0 until count) {
+                            val imageUri = clipData.getItemAt(i).uri
+                            Log.d(TAG, "onActivityResult: requestCode $requestCode from data.clipData $imageUri")
+                            uris.add(imageUri)
+                        }
+                    } else if (data.data != null) {
+                        Log.d(TAG, "onActivityResult: requestCode $requestCode data.data ${data.data}")
+                        uris.add(data.data)
+                    }
+                    gridView.adapter = urisAdapter
+                    urisAdapter.replaceData(uris)
+                } else {
+                    Log.e(TAG, "data is null")
+                }
+            }
+        } else if (PICK_PHOTOS_SINGLE == requestCode) {
+            if (Activity.RESULT_OK == resultCode) {
+                if (data?.data != null) {
+                    Log.d(TAG, "onActivityResult: requestCode $requestCode data.data ${data.data}")
+                    gridView.adapter = urisAdapter
+                    urisAdapter.replaceData(listOf(data.data))
+                }
+            }
+        }
+    }
+
+    private inner class PathsAdapter(activity: Activity) : CommonAdapter<String>(R.layout.grid_item_result, ArrayList()) {
         private val itemSize: Int
 
         init {
@@ -188,6 +254,22 @@ class MainActivity : AppCompatActivity() {
         override fun bindView(viewHolder: ViewHolder, value: String, position: Int) {
             PhotoPicker.photoLoader.loadPhoto(viewHolder.findViewById(R.id.iv_main_photo_thumb)!!,
                     value, itemSize, itemSize)
+        }
+    }
+
+    private inner class UrisAdapter(private val activity: Activity) : CommonAdapter<Uri>(R.layout.grid_item_result, ArrayList()) {
+        private val itemSize: Int
+
+        init {
+            val dm = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(dm)
+            val numColumns = activity.resources.getInteger(io.zhuliang.photopicker.R.integer.grid_num_columns)
+            val horizontalSpacing = activity.resources.getDimensionPixelSize(io.zhuliang.photopicker.R.dimen.grid_horizontal_spacing)
+            itemSize = (dm.widthPixels - (numColumns + 1) * horizontalSpacing) / numColumns
+        }
+
+        override fun bindView(viewHolder: ViewHolder, value: Uri, position: Int) {
+            Glide.with(activity).load(value).into(viewHolder.findViewById(R.id.iv_main_photo_thumb)!!)
         }
     }
 }

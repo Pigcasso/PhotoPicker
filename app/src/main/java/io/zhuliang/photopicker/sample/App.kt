@@ -12,6 +12,7 @@ import io.zhuliang.photopicker.ThemeConfig
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+        PhotoPicker.authority = "${BuildConfig.APPLICATION_ID}.provider"
         PhotoPicker.photoLoader = GlidePhotoLoader()
         PhotoPicker.themeConfig = ThemeConfig()
                 .radioCheckedColor(ContextCompat.getColor(this@App, R.color.colorAccent))

@@ -11,6 +11,10 @@ class PhotoPicker {
     companion object {
         var photoLoader: PhotoLoader = DefaultPhotoLoader
         var themeConfig = ThemeConfig()
+        /**
+         * 用于 [androidx.core.content.FileProvider.getUriForFile]
+         */
+        var authority: String? = null
 
         fun image(context: Context): PhotoChoice {
             return PhotoChoice(context)

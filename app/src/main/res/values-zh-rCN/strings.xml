@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PhotoPicker</string>
     <string name="module_main_single_choice_mode">单选</string>
+    <string name="module_main_multiple_choice_mode">多选</string>
     <string name="module_main_multiple_choice_upper_limit">多选（设置上限）</string>
     <string name="module_main_multiple_choice_no_limit_upper">多选（无上限）</string>
     <string name="module_main_all_photos_album">显示所有照片相册</string>
@@ -14,4 +15,6 @@
     <string name="module_main_choice_mode">选择模式</string>
     <string name="module_main_options_title">选项</string>
     <string name="module_main_results">返回结果</string>
+    <string name="module_main_pick_image_within_app">应用内图片选择器</string>
+    <string name="module_main_pick_from_others">其他应用选择图片</string>
 </resources>

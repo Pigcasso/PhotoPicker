@@ -40,9 +40,9 @@ const val DEFAULT_LIMIT_COUNT = 9
 /**
  * 默认不记录选中的次序
  */
-const val DEFAULT_COUNTABLE = false
+const val DEFAULT_COUNTABLE = true
 /**
  * 不设上限的情况下，默认支持选中全部
  */
-const val DEFAULT_SELECTABLE_ALL = true
+const val DEFAULT_SELECTABLE_ALL = false
 

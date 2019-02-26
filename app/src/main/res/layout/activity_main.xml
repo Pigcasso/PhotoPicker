@@ -4,9 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingEnd="16dp"
     android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp"
     tools:context=".MainActivity">
+
+    <TextView
+        style="@style/Sample.Title"
+        android:text="@string/module_main_pick_image_within_app" />
+
+    <View style="@style/Sample.Divider" />
 
     <TextView
         style="@style/Sample.Title"
@@ -94,7 +101,33 @@
 
     <TextView
         style="@style/Sample.Title"
+        android:text="@string/module_main_pick_from_others" />
+
+    <View style="@style/Sample.Divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="onPickSingleImage"
+            style="@style/Sample.Button"
+            android:text="@string/module_main_single_choice_mode" />
+
+        <Button
+            android:onClick="onPickMultiImages"
+            style="@style/Sample.Button"
+            android:text="@string/module_main_multiple_choice_mode" />
+    </LinearLayout>
+
+
+    <TextView
+        style="@style/Sample.Title"
         android:text="@string/module_main_results" />
+
+    <View style="@style/Sample.Divider" />
 
     <GridView
         android:id="@id/gv_main_results"

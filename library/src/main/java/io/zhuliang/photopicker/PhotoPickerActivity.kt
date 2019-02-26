@@ -1,22 +1,27 @@
 package io.zhuliang.photopicker
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import io.zhuliang.photopicker.api.Action
+import java.io.File
 
 class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
 
     companion object {
-        const val EXTRA_RESULT_SELECTION = "extra_result_selection"
-
         var result: Action<ArrayList<String>>? = null
         var requestCode: Int = -1
         var cancel: Action<String>? = null
@@ -58,13 +63,32 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
 
         var fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(
-                    intent!!.getBooleanExtra(EXTRA_ALL_PHOTOS_ALBUM, true),
-                    intent!!.getIntExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT),
-                    intent!!.getIntExtra(EXTRA_LIMIT_COUNT, NO_LIMIT_COUNT),
-                    intent!!.getBooleanExtra(EXTRA_COUNTABLE, false),
-                    intent!!.getBooleanExtra(EXTRA_PREVIEW, true),
-                    intent!!.getBooleanExtra(EXTRA_SELECTABLE_ALL, false))
+            when (intent.action) {
+                null -> {
+                    fragment = PhotoPickerFragment.newInstance(
+                            intent!!.getBooleanExtra(EXTRA_ALL_PHOTOS_ALBUM, DEFAULT_ALL_PHOTOS_ALBUM),
+                            intent!!.getIntExtra(EXTRA_CHOICE_MODE, CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT),
+                            intent!!.getIntExtra(EXTRA_LIMIT_COUNT, NO_LIMIT_COUNT),
+                            intent!!.getBooleanExtra(EXTRA_COUNTABLE, DEFAULT_COUNTABLE),
+                            intent!!.getBooleanExtra(EXTRA_PREVIEW, DEFAULT_PREVIEW),
+                            intent!!.getBooleanExtra(EXTRA_SELECTABLE_ALL, DEFAULT_SELECTABLE_ALL))
+                }
+                Intent.ACTION_GET_CONTENT, Intent.ACTION_PICK -> {
+                    val choiceMode: Int = if (intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)) {
+                        CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
+                    } else {
+                        CHOICE_MODE_SINGLE
+                    }
+                    fragment = PhotoPickerFragment.newInstance(
+                            intent!!.getBooleanExtra(EXTRA_ALL_PHOTOS_ALBUM, DEFAULT_ALL_PHOTOS_ALBUM),
+                            intent!!.getIntExtra(EXTRA_CHOICE_MODE, choiceMode),
+                            intent!!.getIntExtra(EXTRA_LIMIT_COUNT, NO_LIMIT_COUNT),
+                            intent!!.getBooleanExtra(EXTRA_COUNTABLE, DEFAULT_COUNTABLE),
+                            intent!!.getBooleanExtra(EXTRA_PREVIEW, DEFAULT_PREVIEW),
+                            intent!!.getBooleanExtra(EXTRA_SELECTABLE_ALL, DEFAULT_SELECTABLE_ALL))
+                }
+                else -> throw IllegalStateException("Invalid action ${intent.action}")
+            }
             supportFragmentManager.beginTransaction().add(R.id.contentFrame, fragment).commit()
         }
     }
@@ -95,7 +119,11 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
     }
 
     override fun onBackPressed() {
-        cancel?.onAction(requestCode, "User canceled.")
+        if (cancel == null) {
+            setResult(Activity.RESULT_CANCELED)
+        } else {
+            cancel?.onAction(requestCode, "User canceled.")
+        }
         super.onBackPressed()
     }
 
@@ -121,9 +149,19 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
                 result!!.onAction(requestCode, photoPaths)
                 setResult(Activity.RESULT_OK)
             } else {
-                val data = Intent()
+                /*val data = Intent()
                 data.putStringArrayListExtra(EXTRA_RESULT_SELECTION, photoPaths)
-                setResult(Activity.RESULT_OK, data)
+                setResult(Activity.RESULT_OK, data)*/
+                // 获取一个文件
+                if (photoPaths.size == 1) {
+                    val data = Intent()
+                    data.data = getFilePublicUri(File(photoPaths[0]), PhotoPicker.authority!!)
+                    setResult(Activity.RESULT_OK, data)
+                } else {
+                    val data = Intent()
+                    data.clipData = createClipData("Pick photos", photoPaths, PhotoPicker.authority!!)
+                    setResult(Activity.RESULT_OK, data)
+                }
             }
             finish()
         }
@@ -135,5 +173,45 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         cancel = null
 
         super.finish()
+    }
+
+    private fun createClipData(label: String, paths: List<String>, authority: String): ClipData {
+        check(paths.size > 1)
+        val clipData = ClipData(ClipDescription(label, arrayOf(ClipDescription.MIMETYPE_TEXT_URILIST)), ClipData.Item(getFilePublicUri(File(paths[0]), authority)))
+        for (i in 1 until paths.size) {
+            clipData.addItem(ClipData.Item(getFilePublicUri(File(paths[i]), authority)))
+        }
+        return clipData
+    }
+
+    /**
+     * 参考果仁相册
+     */
+    private fun getFilePublicUri(file: File, authority: String): Uri {
+        // for images/videos/gifs try getting a media content uri first, like content://media/external/images/media/438
+        // if media content uri is null, get our custom uri like content://com.simplemobiletools.gallery.provider/external_files/emulated/0/DCIM/IMG_20171104_233915.jpg
+        var uri = getMediaContent(file.absolutePath, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        if (uri == null) {
+            uri = FileProvider.getUriForFile(this, authority, file)
+        }
+        return uri!!
+    }
+
+    private fun getMediaContent(path: String, uri: Uri): Uri? {
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val selection = MediaStore.Images.Media.DATA + "= ?"
+        val selectionArgs = arrayOf(path)
+        var cursor: Cursor? = null
+        try {
+            cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
+            if (cursor?.moveToFirst() == true) {
+                val id = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)).toString()
+                return Uri.withAppendedPath(uri, id)
+            }
+        } catch (e: Exception) {
+        } finally {
+            cursor?.close()
+        }
+        return null
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.zhuliang.photopicker.sample">
+    package="io.zhuliang.photopicker.sample">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="io.zhuliang.photopicker.sample.App"
@@ -14,13 +14,25 @@
         android:theme="@style/AppTheme">
         <activity android:name="io.zhuliang.photopicker.sample.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="io.zhuliang.photopicker.PhotoPickerActivity"/>
-        <activity android:name="io.zhuliang.photopicker.PhotoViewActivity"/>
+        <activity android:name="io.zhuliang.photopicker.PhotoPickerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+        <activity android:name="io.zhuliang.photopicker.PhotoViewActivity" />
     </application>
 
 </manifest>
