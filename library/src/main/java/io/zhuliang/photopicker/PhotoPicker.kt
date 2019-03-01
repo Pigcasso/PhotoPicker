@@ -9,7 +9,10 @@ import io.zhuliang.photopicker.api.PhotoChoice
 class PhotoPicker {
 
     companion object {
-        var photoLoader: PhotoLoader = DefaultPhotoLoader
+        /**
+         * 不再提供默认相片加载器
+         */
+        lateinit var photoLoader: PhotoLoader
         var themeConfig = ThemeConfig()
         /**
          * 用于 [androidx.core.content.FileProvider.getUriForFile]

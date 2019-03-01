@@ -9,8 +9,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.ListPopupWindow
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.ListPopupWindow
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.ref.WeakReference
 

@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
-import androidx.collection.LruCache
 import android.widget.ImageView
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -15,16 +14,11 @@ import java.util.concurrent.Executors
 /**
  * @author Zhu Liang
  */
+@Deprecated("Please implement photo load by yourself.")
 object DefaultPhotoLoader : PhotoLoader {
 
     private var mPlaceHolderDrawable: Drawable = ColorDrawable(Color.parseColor("#FF2B2B2B"))
-        set(value) {
-            field = value
-        }
     private var mErrorDrawable: Drawable = ColorDrawable(Color.parseColor("#FF2B2B2B"))
-        set(value) {
-            field = value
-        }
     private val mLruCache: androidx.collection.LruCache<String, Bitmap>
     private val mUIHandler: Handler
     private val mExecutorService: ExecutorService
