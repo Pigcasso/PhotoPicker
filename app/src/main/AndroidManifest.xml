@@ -33,6 +33,23 @@
             </intent-filter>
         </activity>
         <activity android:name="io.zhuliang.photopicker.PhotoViewActivity" />
+        <!--下面的代码可以将此应用设置为默认图库，MIUI验证通过-->
+        <!--<activity android:name=".GalleryActivity">
+            <intent-filter>
+                <action
+                    android:name='android.intent.action.MAIN'>
+                </action>
+                <category
+                    android:name='android.intent.category.DEFAULT'>
+                </category>
+                <category
+                    android:name='android.intent.category.LAUNCHER'>
+                </category>
+                <category
+                    android:name='android.intent.category.APP_GALLERY'>
+                </category>
+            </intent-filter>
+        </activity>-->
     </application>
 
 </manifest>
