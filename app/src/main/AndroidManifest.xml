@@ -33,6 +33,17 @@
             </intent-filter>
         </activity>
         <activity android:name="io.zhuliang.photopicker.PhotoViewActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="io.zhuliang.photopicker.sample.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!--下面的代码可以将此应用设置为默认图库，MIUI验证通过-->
         <!--<activity android:name=".GalleryActivity">
             <intent-filter>
