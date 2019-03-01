@@ -16,4 +16,9 @@
     <string name="module_photo_view_preview">Preview(%d/%d)</string>
     <string name="module_photo_view_checked">Select</string>
     <string name="module_photo_view_checkbox_desc">Select</string>
+    <string name="module_photo_picker_request_permission">Request permission</string>
+    <string name="module_photo_picker_positive">OK</string>
+    <string name="module_photo_picker_negative">Cancel</string>
+    <string name="module_photo_picker_neutral">Settings</string>
+    <string name="module_photo_picker_error_open_failed_no_apps">Not found settings app</string>
 </resources>

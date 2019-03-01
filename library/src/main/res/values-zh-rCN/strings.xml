@@ -16,4 +16,9 @@
     <string name="module_photo_view_preview">预览(%d/%d)</string>
     <string name="module_photo_view_checked">选择</string>
     <string name="module_photo_view_checkbox_desc">选择</string>
+    <string name="module_photo_picker_request_permission">点击请求</string>
+    <string name="module_photo_picker_positive">确定</string>
+    <string name="module_photo_picker_negative">取消</string>
+    <string name="module_photo_picker_neutral">系统设置</string>
+    <string name="module_photo_picker_error_open_failed_no_apps">打开系统设置失败</string>
 </resources>

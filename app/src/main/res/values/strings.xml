@@ -16,5 +16,5 @@
     <string name="module_main_results">Results</string>
     <string name="module_main_pick_image_within_app">Pick image within app</string>
     <string name="module_main_pick_from_others">Pick image from others</string>
-    <string name="module_main_show_photo_picker">打开图片选择器</string>
+    <string name="module_main_show_photo_picker">Open photo picker</string>
 </resources>

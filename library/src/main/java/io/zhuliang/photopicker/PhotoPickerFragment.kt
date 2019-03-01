@@ -5,10 +5,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +19,16 @@ import android.view.ViewGroup
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ListPopupWindow
-import pub.devrel.easypermissions.EasyPermissions
+import androidx.core.app.ActivityCompat
+import kotlinx.android.synthetic.main.fragment_photo_picker.*
 import java.lang.ref.WeakReference
 
 /**
  * @author Zhu Liang
  */
-class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.PermissionCallbacks {
+class PhotoPickerFragment : androidx.fragment.app.Fragment() {
 
     private var mSelectedAlbum: Album? = null
     private lateinit var mAlbumsAdapter: AlbumsAdapter
@@ -58,9 +63,10 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
     private var mSelectableAll: Boolean = false
 
     companion object {
-        private const val PERMISSIONS = Manifest.permission.READ_EXTERNAL_STORAGE
-        private const val RC_READ_EXTERNAL_STORAGE = 1
+        private val STORAGE_PERMISSIONS = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        private const val RC_STORAGE_PERMISSIONS = 1
         private const val RC_PHOTO_VIEW = 2
+        private const val RC_APP_SETTINGS = 3
         private const val EXTRA_CHECKED_PHOTOS = "extra.CHECKED_PHOTOS"
 
         fun newInstance(allPhotosAlbum: Boolean, choiceMode: Int, limitCount: Int, countable: Boolean, preview: Boolean, selectableAll: Boolean): PhotoPickerFragment {
@@ -148,19 +154,23 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
         } else {
             View.INVISIBLE
         }
-        previewView.setOnClickListener {
-            showPhotoPreview()
-        }
+        previewView.setOnClickListener { showPhotoPreview() }
+        requestPermissionBtn.setOnClickListener { showStorageRationale() }
 
         initThemeConfig()
 
         onPhotosSelect()
         updateToggleText()
 
-        if (EasyPermissions.hasPermissions(context!!, PERMISSIONS)) {
+        requestStoragePermissions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (hasStoragePermissions()) {
             loadAlbums()
         } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.module_photo_picker_read_external_storage_rationale), RC_READ_EXTERNAL_STORAGE, PERMISSIONS)
+            setStatusIndicator(getString(R.string.module_photo_picker_read_external_storage_denied))
         }
     }
 
@@ -173,15 +183,11 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        setStatusIndicator(getString(R.string.module_photo_picker_read_external_storage_denied))
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        loadAlbums()
+        if (RC_STORAGE_PERMISSIONS == requestCode) {
+            if (!hasStoragePermissions()) {
+                showToast(R.string.module_photo_picker_read_external_storage_denied)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -207,10 +213,12 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
                 indicatorRv.visibility = View.VISIBLE
                 loadingIndicator.visibility = View.VISIBLE
                 statusIndicator.visibility = View.INVISIBLE
+                requestPermissionBtn.visibility = View.INVISIBLE
             } else {
                 indicatorRv.visibility = View.INVISIBLE
                 loadingIndicator.visibility = View.INVISIBLE
                 statusIndicator.visibility = View.VISIBLE
+                requestPermissionBtn.visibility = View.VISIBLE
             }
         }
     }
@@ -224,6 +232,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
             indicatorRv.visibility = View.VISIBLE
             loadingIndicator.visibility = View.INVISIBLE
             statusIndicator.visibility = View.VISIBLE
+            requestPermissionBtn.visibility = View.VISIBLE
             statusIndicator.text = statusText
         }
     }
@@ -274,7 +283,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
     }
 
     private fun showPhotos(photos: List<Photo>) {
-        val gridView = findViewById<GridView>(R.id.gridView)
+        val gridView: GridView? = findViewById(R.id.gridView)
         when (mChoiceMode) {
             CHOICE_MODE_SINGLE -> {
                 mPhotosAdapter = UnorderedPhotosAdapter(this, photos)
@@ -429,6 +438,64 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment(), EasyPermissions.Pe
 
     private fun allowsToCheck(): Boolean {
         return mLimitCount == NO_LIMIT_COUNT || mCheckedPhotos.size < mLimitCount
+    }
+
+    private fun hasStoragePermissions(): Boolean {
+        for (permission in STORAGE_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(activity!!, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun shouldShowStorageRationale(): Boolean {
+        for (permission in STORAGE_PERMISSIONS) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, permission)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 参考果仁相册
+     */
+    private fun requestStoragePermissions() {
+        if (!hasStoragePermissions()) {
+            if (shouldShowStorageRationale()) {
+                showStorageRationale()
+            } else {
+                ActivityCompat.requestPermissions(activity!!, STORAGE_PERMISSIONS, RC_STORAGE_PERMISSIONS)
+            }
+        }
+    }
+
+    private fun showStorageRationale() {
+        AlertDialog.Builder(activity!!)
+                .setTitle(R.string.module_photo_picker_read_external_storage_rationale)
+                .setPositiveButton(R.string.module_photo_picker_positive) { _, _ ->
+                    // 请求权限
+                    requestPermissions(STORAGE_PERMISSIONS, RC_STORAGE_PERMISSIONS)
+                }
+                .setNegativeButton(R.string.module_photo_picker_negative) { _, _ -> }
+                .setNeutralButton(R.string.module_photo_picker_neutral) { _, _ ->
+                    // 系统设置
+                    showAppSettings()
+                }
+                .show()
+    }
+
+    private fun showAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                .setData(Uri.fromParts("package", activity!!.packageName, null))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (intent.resolveActivity(activity!!.packageManager) != null) {
+            startActivityForResult(intent, RC_APP_SETTINGS)
+        } else {
+            showToast(R.string.module_photo_picker_error_open_failed_no_apps)
+        }
     }
 
     /**
