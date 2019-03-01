@@ -99,6 +99,12 @@
 
     </GridLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/module_main_show_photo_picker"
+        android:onClick="onShowPhotoPicker" />
+
     <TextView
         style="@style/Sample.Title"
         android:text="@string/module_main_pick_from_others" />
@@ -112,13 +118,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:onClick="onPickSingleImage"
             style="@style/Sample.Button"
+            android:onClick="onPickSingleImage"
             android:text="@string/module_main_single_choice_mode" />
 
         <Button
-            android:onClick="onPickMultiImages"
             style="@style/Sample.Button"
+            android:onClick="onPickMultiImages"
             android:text="@string/module_main_multiple_choice_mode" />
     </LinearLayout>
 

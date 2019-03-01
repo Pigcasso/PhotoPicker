@@ -7,8 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
@@ -99,22 +97,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item == null) {
-            return super.onOptionsItemSelected(item)
-        }
-        if (item.itemId == R.id.menu_choice_done) {
-            start()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun setChoiceMode(choiceMode: Int) {
         if (this.choiceMode != choiceMode) {
             this.choiceMode = choiceMode
@@ -142,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun start() {
+    private fun showPhotoPicker() {
         when (choiceMode) {
             CHOICE_MODE_SINGLE -> {
                 PhotoPicker
@@ -190,6 +172,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
+    fun onShowPhotoPicker(view: View) {
+        showPhotoPicker()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
     fun onPickSingleImage(view: View) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -212,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                 if (data != null) {
                     val uris = mutableListOf<Uri>()
                     val clipData = data.clipData
+                    val uriData = data.data
                     if (clipData != null) {
                         val count = clipData.itemCount
                         for (i in 0 until count) {
@@ -219,9 +207,9 @@ class MainActivity : AppCompatActivity() {
                             Log.d(TAG, "onActivityResult: requestCode $requestCode from data.clipData $imageUri")
                             uris.add(imageUri)
                         }
-                    } else if (data.data != null) {
-                        Log.d(TAG, "onActivityResult: requestCode $requestCode data.data ${data.data}")
-                        uris.add(data.data)
+                    } else if (uriData != null) {
+                        Log.d(TAG, "onActivityResult: requestCode $requestCode data.data $uriData")
+                        uris.add(uriData)
                     }
                     gridView.adapter = urisAdapter
                     urisAdapter.replaceData(uris)

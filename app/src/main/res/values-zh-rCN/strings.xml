@@ -11,10 +11,10 @@
     <string name="module_main_multiple_choice_limit_count">默认 9 张</string>
     <string name="module_main_choice_done">完成</string>
     <string name="module_main_multiple_choice_selectable_all">支持全选</string>
-
     <string name="module_main_choice_mode">选择模式</string>
     <string name="module_main_options_title">选项</string>
     <string name="module_main_results">返回结果</string>
     <string name="module_main_pick_image_within_app">应用内图片选择器</string>
     <string name="module_main_pick_from_others">其他应用选择图片</string>
+    <string name="module_main_show_photo_picker">打开图片选择器</string>
 </resources>
