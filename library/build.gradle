@@ -32,11 +32,10 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppcompatVersion"
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
+    androidTestImplementation "androidx.test:runner:$rootProject.ext.runnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
 }
 
 // apply from: 'https://github.com/yanzhenjie/bintray/blob/master/bintray.gradle?raw=true'

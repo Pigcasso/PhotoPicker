@@ -34,9 +34,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppcompatVersion"
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test:runner:$rootProject.ext.runnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
 }
