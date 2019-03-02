@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.zhuliang.photopicker.sample">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name="io.zhuliang.photopicker.sample.App"
+        android:name="io.zhuliang.photopicker.sample.SampleApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name="io.zhuliang.photopicker.sample.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,17 +21,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="io.zhuliang.photopicker.sample.PhotoPickerActivity">
+        <activity android:name="io.zhuliang.photopicker.PhotoPickerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.OPENABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
+                <data android:mimeType="vnd.android.cursor.dir/image" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
+                <data android:mimeType="vnd.android.cursor.dir/image" />
             </intent-filter>
         </activity>
         <activity android:name="io.zhuliang.photopicker.PhotoViewActivity" />

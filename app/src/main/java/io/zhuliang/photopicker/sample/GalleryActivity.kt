@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * <pre>
- *     author : Julian
+ *     author : ZhuLiang
  *     time   : 2019/03/01
  *     desc   :
  *     version: 1.0

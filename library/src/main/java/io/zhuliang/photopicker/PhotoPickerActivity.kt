@@ -19,7 +19,7 @@ import androidx.core.content.FileProvider
 import io.zhuliang.photopicker.api.Action
 import java.io.File
 
-open class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
+class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPickerListener {
 
     companion object {
         var result: Action<ArrayList<String>>? = null
