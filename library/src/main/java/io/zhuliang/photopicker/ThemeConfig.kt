@@ -20,6 +20,9 @@ class ThemeConfig {
     internal var arrowDropColor: Int = Color.GREEN
     internal var actionBarBackground = Color.RED
     internal var statusBarColor = Color.MAGENTA
+    internal var albumPickerItemTextColor = Color.BLACK
+    internal var albumPickerBackgroundColor = Color.GRAY
+
 
     fun bottomBarBackgroundColor(bottomBarBackgroundColor: Int): ThemeConfig {
         this.bottomBarBackgroundColor = bottomBarBackgroundColor
@@ -68,6 +71,16 @@ class ThemeConfig {
 
     fun statusBarColor(statusBarColor: Int): ThemeConfig {
         this.statusBarColor = statusBarColor
+        return this
+    }
+
+    fun albumPickerItemTextColor(albumPickerItemTextColor: Int): ThemeConfig {
+        this.albumPickerItemTextColor = albumPickerItemTextColor
+        return this
+    }
+
+    fun albumPickerBackgroundColor(albumPickerBackgroundColor: Int): ThemeConfig {
+        this.albumPickerBackgroundColor = albumPickerBackgroundColor
         return this
     }
 

@@ -6,7 +6,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.AsyncTask
@@ -320,7 +319,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         popupWindow.width = gridView.width
         popupWindow.height = gridView.height
 
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        popupWindow.setBackgroundDrawable(ColorDrawable(PhotoPicker.themeConfig.albumPickerBackgroundColor))
         popupWindow.anchorView = view!!.findViewById(R.id.popup_anchor)
         popupWindow.isModal = true
         popupWindow.setAdapter(mAlbumsAdapter)
@@ -609,8 +608,12 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
             val coverIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_cover)!!
             PhotoPicker.photoLoader.loadPhoto(coverIv, value.photos.first().absolutePath, itemSize, itemSize)
 
-            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!.text = value.name
-            viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!.text = "${value.photos.size}"
+            val albumName = viewHolder.findViewById<TextView>(R.id.tv_photo_picker_album_name)!!
+            albumName.setTextColor(PhotoPicker.themeConfig.albumPickerItemTextColor)
+            albumName.text = value.name
+            val photoCount = viewHolder.findViewById<TextView>(R.id.tv_photo_picker_photo_count)!!
+            photoCount.text = "${value.photos.size}"
+            photoCount.setTextColor(PhotoPicker.themeConfig.albumPickerItemTextColor)
 
             viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_album_checkbox)?.setColorFilter(PhotoPicker.themeConfig.radioCheckedColor)
 

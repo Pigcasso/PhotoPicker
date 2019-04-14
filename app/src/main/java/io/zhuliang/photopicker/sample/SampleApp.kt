@@ -39,6 +39,8 @@ class SampleApp : Application() {
                 .orderedUncheckedBackground(R.drawable.ic_app_badge_unchecked_24dp)
                 .actionBarBackground(ContextCompat.getColor(this, R.color.colorPrimary))
                 .statusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                .albumPickerItemTextColor(Color.GRAY)
+                .albumPickerBackgroundColor(Color.WHITE)
         PhotoPicker.authority = "${BuildConfig.APPLICATION_ID}.provider"
         PhotoPicker.photoLoader = GlidePhotoLoader()
     }
