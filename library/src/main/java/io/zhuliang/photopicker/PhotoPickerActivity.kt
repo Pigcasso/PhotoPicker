@@ -102,9 +102,7 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item ?: return super.onOptionsItemSelected(item)
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
@@ -201,17 +199,14 @@ class PhotoPickerActivity : AppCompatActivity(), PhotoPickerFragment.OnPhotoPick
         val projection = arrayOf(MediaStore.Images.Media._ID)
         val selection = MediaStore.Images.Media.DATA + "= ?"
         val selectionArgs = arrayOf(path)
-        var cursor: Cursor? = null
-        try {
-            cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
-            if (cursor?.moveToFirst() == true) {
-                val id = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID)).toString()
-                return Uri.withAppendedPath(uri, id)
+        return contentResolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+                val id = cursor.getInt(idColumn).toString()
+                Uri.withAppendedPath(uri, id)
+            } else {
+                null
             }
-        } catch (e: Exception) {
-        } finally {
-            cursor?.close()
         }
-        return null
     }
 }

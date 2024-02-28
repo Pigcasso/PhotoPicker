@@ -47,16 +47,16 @@ object DefaultPhotoLoader : PhotoLoader {
     }
 
     private fun getBitmapFromCache(imageInfo: ImageInfo): Bitmap? {
-        synchronized(mLruCache, {
+        synchronized(mLruCache) {
             return mLruCache.get(imageInfo.toString())
-        })
+        }
     }
 
     private fun addBitmapToCache(bitmap: Bitmap?, imageInfo: ImageInfo) {
         if (getBitmapFromCache(imageInfo) == null && bitmap != null) {
-            synchronized(mLruCache, {
+            synchronized(mLruCache) {
                 mLruCache.put(imageInfo.toString(), bitmap)
-            })
+            }
         }
     }
 

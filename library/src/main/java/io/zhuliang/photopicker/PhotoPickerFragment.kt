@@ -9,19 +9,20 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.main.fragment_photo_picker.*
 import java.lang.ref.WeakReference
 
 /**
@@ -61,8 +62,14 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
      */
     private var mSelectableAll: Boolean = false
 
+    private lateinit var requestPermissionBtn: Button
+
     companion object {
-        private val STORAGE_PERMISSIONS = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        private val STORAGE_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
         private const val RC_STORAGE_PERMISSIONS = 1
         private const val RC_PHOTO_VIEW = 2
         private const val RC_APP_SETTINGS = 3
@@ -83,7 +90,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (context is OnPhotoPickerListener) {
@@ -94,7 +101,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAlbumsAdapter = AlbumsAdapter(context!!, arrayListOf())
+        mAlbumsAdapter = AlbumsAdapter(requireContext(), arrayListOf())
 
         mCheckedPhotos = if (savedInstanceState != null) {
             savedInstanceState.getStringArrayList(EXTRA_CHECKED_PHOTOS)!!
@@ -103,26 +110,26 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         }
 
         // arguments不能为空
-        checkNotNull(arguments)
+        val arguments = requireArguments()
 
         // 设置选择模式
-        val choiceMode = arguments!!.getInt(EXTRA_CHOICE_MODE)
+        val choiceMode = arguments.getInt(EXTRA_CHOICE_MODE)
         check(choiceMode == CHOICE_MODE_SINGLE
                 || choiceMode == CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT
                 || choiceMode == CHOICE_MODE_MULTIPLE_UPPER_LIMIT) { "Invalid choice mode: $choiceMode" }
         mChoiceMode = choiceMode
 
-        val limitCount = arguments!!.getInt(EXTRA_LIMIT_COUNT)
+        val limitCount = arguments.getInt(EXTRA_LIMIT_COUNT)
         check(limitCount == NO_LIMIT_COUNT || limitCount >= 1) { "Invalid limit count: $limitCount" }
         mLimitCount = limitCount
 
-        mAllPhotosAlbum = arguments!!.getBoolean(EXTRA_ALL_PHOTOS_ALBUM, true)
+        mAllPhotosAlbum = arguments.getBoolean(EXTRA_ALL_PHOTOS_ALBUM, true)
 
-        mCountable = arguments!!.getBoolean(EXTRA_COUNTABLE, false)
+        mCountable = arguments.getBoolean(EXTRA_COUNTABLE, false)
 
-        mPreview = arguments!!.getBoolean(EXTRA_PREVIEW, true)
+        mPreview = arguments.getBoolean(EXTRA_PREVIEW, true)
 
-        mSelectableAll = arguments!!.getBoolean(EXTRA_SELECTABLE_ALL, false)
+        mSelectableAll = arguments.getBoolean(EXTRA_SELECTABLE_ALL, false)
 
         setHasOptionsMenu(true)
 
@@ -154,14 +161,13 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
             View.INVISIBLE
         }
         previewView.setOnClickListener { showPhotoPreview() }
+        requestPermissionBtn = findViewById(R.id.requestPermissionBtn)!!
         requestPermissionBtn.setOnClickListener { showStorageRationale() }
 
         initThemeConfig()
 
         onPhotosSelect()
         updateToggleText()
-
-        requestStoragePermissions()
     }
 
     override fun onResume() {
@@ -193,7 +199,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         when (requestCode) {
             RC_PHOTO_VIEW -> {
                 if (Activity.RESULT_OK == resultCode) {
-                    mCheckedPhotos = data!!.getStringArrayListExtra(PhotoViewActivity.EXTRA_CHECKED_PHOTOS)
+                    mCheckedPhotos = data!!.getStringArrayListExtra(PhotoViewActivity.EXTRA_CHECKED_PHOTOS)!!
                     onPhotosSelect()
                     updateToggleText()
                     mPhotosAdapter!!.notifyDataSetChanged()
@@ -245,7 +251,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         findViewById<TextView>(R.id.tv_photo_picker_preview)!!.setTextColor(themeConfig.bottomBarTextColor)
         findViewById<TextView>(R.id.tv_photo_picker_selected_toggle)!!.setTextColor(themeConfig.bottomBarTextColor)
         albumLabelText.setTextColor(themeConfig.bottomBarTextColor)
-        val arrowDrawable = ThemeConfig.tint(context!!, R.drawable.ic_arrow_drop_up_black_24dp, PhotoPicker.themeConfig.arrowDropColor)
+        val arrowDrawable = ThemeConfig.tint(requireContext(), R.drawable.ic_arrow_drop_up_black_24dp, PhotoPicker.themeConfig.arrowDropColor)
         albumLabelText.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDrawable, null)
     }
 
@@ -315,12 +321,12 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
     private fun showAlbumPicker() {
         val gridView = findViewById<GridView>(R.id.gridView) ?: return
 
-        val popupWindow = ListPopupWindow(context!!)
+        val popupWindow = ListPopupWindow(requireContext())
         popupWindow.width = gridView.width
         popupWindow.height = gridView.height
 
         popupWindow.setBackgroundDrawable(ColorDrawable(PhotoPicker.themeConfig.albumPickerBackgroundColor))
-        popupWindow.anchorView = view!!.findViewById(R.id.popup_anchor)
+        popupWindow.anchorView = requireView().findViewById(R.id.popup_anchor)
         popupWindow.isModal = true
         popupWindow.setAdapter(mAlbumsAdapter)
         popupWindow.setOnItemClickListener { _, _, position, _ ->
@@ -409,7 +415,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
 
     private fun showPhotoPreview() {
         if (context == null) return
-        val intent = PhotoViewActivity.makeIntent(context!!, getAllCheckedPhotos())
+        val intent = PhotoViewActivity.makeIntent(requireContext(), getAllCheckedPhotos())
         startActivityForResult(intent, RC_PHOTO_VIEW)
     }
 
@@ -420,7 +426,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         if (view == null || mPhotosAdapter == null) {
             return
         }
-        val toggleText = view!!.findViewById<TextView>(R.id.tv_photo_picker_selected_toggle)
+        val toggleText = requireView().findViewById<TextView>(R.id.tv_photo_picker_selected_toggle)
         // 只有不设上限的多选模式才支持全选功能
         if (CHOICE_MODE_MULTIPLE_NO_UPPER_LIMIT == mChoiceMode) {
             toggleText.setText(if (isCheckedAll()) {
@@ -441,7 +447,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
 
     private fun hasStoragePermissions(): Boolean {
         for (permission in STORAGE_PERMISSIONS) {
-            if (ActivityCompat.checkSelfPermission(activity!!, permission)
+            if (ActivityCompat.checkSelfPermission(requireActivity(), permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false
             }
@@ -449,30 +455,8 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
         return true
     }
 
-    private fun shouldShowStorageRationale(): Boolean {
-        for (permission in STORAGE_PERMISSIONS) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, permission)) {
-                return true
-            }
-        }
-        return false
-    }
-
-    /**
-     * 参考果仁相册
-     */
-    private fun requestStoragePermissions() {
-        if (!hasStoragePermissions()) {
-            if (shouldShowStorageRationale()) {
-                showStorageRationale()
-            } else {
-                ActivityCompat.requestPermissions(activity!!, STORAGE_PERMISSIONS, RC_STORAGE_PERMISSIONS)
-            }
-        }
-    }
-
     private fun showStorageRationale() {
-        AlertDialog.Builder(activity!!)
+        AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.module_photo_picker_read_external_storage_rationale)
                 .setPositiveButton(R.string.module_photo_picker_positive) { _, _ ->
                     // 请求权限
@@ -488,11 +472,11 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
 
     private fun showAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                .setData(Uri.fromParts("package", activity!!.packageName, null))
+            .setData(Uri.fromParts("package", requireActivity().packageName, null))
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (intent.resolveActivity(activity!!.packageManager) != null) {
+        try {
             startActivityForResult(intent, RC_APP_SETTINGS)
-        } else {
+        } catch (e: Exception) {
             showToast(R.string.module_photo_picker_error_open_failed_no_apps)
         }
     }
@@ -502,8 +486,8 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
      */
     private class UnorderedPhotosAdapter(fragment: PhotoPickerFragment, photos: List<Photo>) : AbsPhotosAdapter(fragment, R.layout.grid_item_photo, photos) {
 
-        val checkboxOutlineDrawable = ThemeConfig.tint(fragment.context!!, R.drawable.ic_check_box_outline_blank_black_24dp, PhotoPicker.themeConfig.checkboxOutlineColor)
-        val checkboxDrawable = ThemeConfig.tint(fragment.context!!, R.drawable.ic_check_box_black_24dp, PhotoPicker.themeConfig.checkboxColor)
+        val checkboxOutlineDrawable = ThemeConfig.tint(fragment.requireContext(), R.drawable.ic_check_box_outline_blank_black_24dp, PhotoPicker.themeConfig.checkboxOutlineColor)
+        val checkboxDrawable = ThemeConfig.tint(fragment.requireContext(), R.drawable.ic_check_box_black_24dp, PhotoPicker.themeConfig.checkboxColor)
 
         override fun bindView(viewHolder: ViewHolder, value: Photo, position: Int) {
             val thumbIv = viewHolder.findViewById<ImageView>(R.id.iv_photo_picker_photo_thumb)!!
@@ -591,7 +575,7 @@ class PhotoPickerFragment : androidx.fragment.app.Fragment() {
 
         init {
             val dm = DisplayMetrics()
-            val activity = fragment.activity!!
+            val activity = fragment.requireActivity()
             activity.windowManager.defaultDisplay.getMetrics(dm)
             val numColumns = activity.resources.getInteger(R.integer.grid_num_columns)
             val horizontalSpacing = activity.resources.getDimensionPixelSize(R.dimen.grid_horizontal_spacing)

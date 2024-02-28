@@ -58,13 +58,13 @@ class PhotoViewActivity : AppCompatActivity() {
         val currentItem = savedInstanceState?.getInt(EXTRA_CURRENT_ITEM) ?: 0
         mCurrentItem = currentItem
 
-        mPhotos = intent.getStringArrayListExtra(EXTRA_PHOTOS)
+        mPhotos = intent.getStringArrayListExtra(EXTRA_PHOTOS)!!
 
         mCheckedPhotos = if (savedInstanceState == null) {
             val checkedPhotos = HashMap<String, Boolean>()
-            mPhotos.forEach({ it ->
+            mPhotos.forEach {
                 checkedPhotos[it] = true
-            })
+            }
             checkedPhotos
         } else {
             savedInstanceState.getSerializable(EXTRA_CHECKED_PHOTOS) as HashMap<String, Boolean>
@@ -105,14 +105,14 @@ class PhotoViewActivity : AppCompatActivity() {
         setCheckedPhoto(photo, isCheckedPhoto(photo))
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(EXTRA_CURRENT_ITEM, mCurrentItem)
-        outState?.putSerializable(EXTRA_CHECKED_PHOTOS, mCheckedPhotos)
+        outState.putInt(EXTRA_CURRENT_ITEM, mCurrentItem)
+        outState.putSerializable(EXTRA_CHECKED_PHOTOS, mCheckedPhotos)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item != null && item.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }
@@ -122,11 +122,11 @@ class PhotoViewActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val data = Intent()
         val checkedPhotos = ArrayList<String>()
-        mPhotos.forEach({ it ->
+        mPhotos.forEach {
             if (mCheckedPhotos[it] == true) {
                 checkedPhotos.add(it)
             }
-        })
+        }
         data.putStringArrayListExtra(EXTRA_CHECKED_PHOTOS, checkedPhotos)
         setResult(Activity.RESULT_OK, data)
         finish()

@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                 if (data?.data != null) {
                     Log.d(TAG, "onActivityResult: requestCode $requestCode data.data ${data.data}")
                     gridView.adapter = urisAdapter
-                    urisAdapter.replaceData(listOf(data.data))
+                    urisAdapter.replaceData(listOf(data.data!!))
                 }
             }
         }

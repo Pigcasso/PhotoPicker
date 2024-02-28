@@ -4,6 +4,7 @@
     package="io.zhuliang.photopicker.sample">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:name="io.zhuliang.photopicker.sample.SampleApp"
@@ -14,14 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="io.zhuliang.photopicker.sample.MainActivity">
+        <activity android:name="io.zhuliang.photopicker.sample.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="io.zhuliang.photopicker.PhotoPickerActivity">
+        <activity
+            android:name="io.zhuliang.photopicker.PhotoPickerActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
 
