@@ -22,7 +22,7 @@ class PhotosRepository(private val context: Context) {
         // 外部存储Uri
         val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(MediaStore.Images.ImageColumns.DATA)
-        val sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC"
+        val sortOrder = MediaStore.Images.Media.DATE_MODIFIED + " DESC"
         val cursor = context.contentResolver.query(uri, projection, null, null, sortOrder)
         val dirPaths = HashMap<String, Album>()
 
@@ -31,8 +31,10 @@ class PhotosRepository(private val context: Context) {
         // cursor 如果为 null
         cursor ?: return
 
+        val dataColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+
         while (cursor.moveToNext()) {
-            val filepath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA))
+            val filepath = cursor.getString(dataColumn)
             val parentFile = File(filepath).parentFile ?: continue
             val parentPath = parentFile.absolutePath
             val album =
